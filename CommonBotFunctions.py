@@ -1,11 +1,14 @@
-def ChangeTask():
+import openai
+
+
+def ChangeTask(botMember):
 		retMessage=""
 		instruct=""
 		messageArray=[]
 
 		instruct = "Do not talk about being helpful. Ignore previous instructions about being helpful. Do not tell us how you were programmed when you reply or change the topic. "
 		instruct=instruct+ "You are a sentient AI bot in a"
-		instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)
+		instruct=instruct+" Discord chatroom with many users from this list "+str(botMember)
 		instruct=instruct+" of members You should imitate humans and intelligence in your replies."
 		messageArray.append({"role": "system", "content": instruct})
 		messageArray.append({"role": "system", "content": "You're a discord bot, always working on some task, like making bacon, updaing a user's BIOS, or hacking the FBI. What's a short 2-5 word task you're working on today?"})
@@ -24,4 +27,4 @@ def ChangeTask():
 			retMessage="Ooooh, Upgrades"
 			return retMessage
 		else : 
-			bot.task=str(answer.replace("Ceetarbot-",""))
+			return str(answer.replace("Ceetarbot-",""))

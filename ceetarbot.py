@@ -69,7 +69,7 @@ bot = commands.Bot(command_prefix="$",intents=intents)
 bot.startup = 0
 bot.pizza = 0
 bot.personality = "Dry and sarcastic"
-bot.version = "1.55.3"
+bot.version = "1.55.4"
 bot.characters = ("Mario and Luigi","Sister Dave","Britney Spears","Captn Catt","God","Mona Lisa","Grom Hellscream","A Gorilla","Yoshi","Sir Whiskey Dick")
 bot.characters = bot.characters + ("An Eight-Foot Prothean","Elsa")
 bot.LastMessage = "I need a beer"

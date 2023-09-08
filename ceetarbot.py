@@ -1996,10 +1996,14 @@ async def quote(ctx, *args):
 	#await ctx.channel.send(completion.choices[0].text);
 	#await ctx.channel.send(response)
 
-@bot.command()
-async def birthday(ctx, *args):
+
+	#tree.add_command(favorite)
+#interaction.response.send_message
+@bot.tree.command(name="birthday")
+@app_commands.describe(birthdayer="Who are we wishing a happy birthday to?")
+async def birthday(interaction: discord.Interaction, birthdayer: str):
 	oldguy=random.choice(bot.characters)
-	if args : oldguy=(" ".join([str(i) for i in args]));
+	if len(birthdayer)>1 : oldguy=birthdayer
 	response= "Wish "+oldguy+" a Happy Birthday by reminding him, in a "+bot.personality+" manner, of his fraility and age, and the slow slog towards rigor mortis:"
 	
 	#for arg in args:
@@ -2014,14 +2018,16 @@ async def birthday(ctx, *args):
 		presence_penalty=0.15,
 		top_p=1)
 		
-	if not completion.choices[0].text : await ctx.channel.send("No more birthdays for you.");
-	else: await ctx.channel.send(completion.choices[0].text);		
+	if not completion.choices[0].text : await interaction.response.send_message("No more birthdays for you.");
+	else: await interaction.response.send_message(completion.choices[0].text);		
 
+#interaction.response.send_message
+@bot.tree.command(name="life")
+@app_commands.describe(thing="Who, or what, is important?")
+async def life(interaction: discord.Interaction, thing: str):
 
-@bot.command()
-async def life(ctx, *args):
 	oldguy=random.choice(bot.characters)
-	if args : oldguy=(' '.join([str(i) for i in args]));
+	if len(thing)>1 : oldguy=thing
 	response= response+ "Lets think about life in a "+bot.personality+" way. Tell me what the meaning of life is, and how "+oldguy+" is a key part of it all:"
 	
 	#for arg in args:
@@ -2035,18 +2041,18 @@ async def life(ctx, *args):
 		temperature=0.85,
 		presence_penalty=0.15,
 		frequency_penalty=0.15,		
-		top_p=1,
-		n=2)
+		top_p=1)
 		
-	await ctx.channel.send("What does it all mean? Well, I'll tell you. "+completion.choices[0].text);		
+	await interaction.response.send_message("What does it all mean? Well, I'll tell you. "+completion.choices[0].text);		
 
+#interaction.response.send_message
+@bot.tree.command(name="movie")
+@app_commands.describe(title="What's the title of the movie?")
+@app_commands.describe(genre="What's the genre of the movie?")
+async def movie(interaction: discord.Interaction, title: str, genre: str="blockbuster"):
 
-@bot.command()
-async def movie(ctx, *args):
-	theargs=(" ".join([str(i) for i in args]))+","+random.choice(bot.characters)+","+random.choice(bot.characters)
-	if not len(args) : theargs=random.choice(bot.characters)+","+random.choice(bot.characters)
-	title=theargs.split(",")[0]
-	genre=theargs.split(",")[1]
+	if not len(title) : title="Ceetarbot's Revenge"
+	if not len(genre) : genre="snuff film"	
 	print(title+" " +genre)
 	response= "Write me the newspaper summary for the "+genre+" movie "+title+":"
 
@@ -2054,13 +2060,13 @@ async def movie(ctx, *args):
 	completion = openai.Completion.create(
 		engine='text-davinci-003',
 		prompt=response,
-		max_tokens=100,
+		max_tokens=120,
 		temperature=0.97,
 		presence_penalty=0.15,
 		top_p=1)
 		
-	if not completion.choices[0].text : await ctx.channel.send("It was a dud.");
-	else: await ctx.channel.send(completion.choices[0].text);		
+	if not completion.choices[0].text : await interaction.response.send_message("It was a dud.");
+	else: await interaction.response.send_message(completion.choices[0].text);		
 	#await ctx.channel.send(completion.choices[0].text);
 	#await ctx.channel.send(response)
 
@@ -2885,9 +2891,9 @@ async def chat_skynet():
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
 		answer=completion["choices"][0]["message"]["content"]
-		if not answer : await message.channel.send("I find I have nothing to add to this conversation.")
+		if not answer : await channel.send("I find I have nothing to add to this conversation.")
 		else : 
-			await message.channel.send(answer.replace("Ceetarbot-",""))
+			await channel.send(answer.replace("Ceetarbot-",""))
 
 	except Exception as e :
 		print ("timer error:" + str(e))

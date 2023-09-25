@@ -1,5 +1,5 @@
-# ceetarbot.py version 1.23
-from asyncio import events
+# ceetarbot.py version 1.43
+#from asyncio import events
 import os
 import random
 import shutil
@@ -15,7 +15,7 @@ import datetime
 import calendar
 import asyncio
 import math
-import replicate
+#import replicate
 import urllib.parse
 #import clientimage
 import subprocess
@@ -23,7 +23,6 @@ import subprocess
 import io
 import warnings
 import glob
-import CommonBotFunctions as CBF
 #import ntlk
 
 from urllib import parse, request
@@ -38,6 +37,7 @@ from stability_sdk import client
 from transformers import ViTImageProcessor, ViTForImageClassification
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 import getpass
+from CommonBotFunctions import *
 
 message="";
 message2="";
@@ -69,7 +69,7 @@ bot = commands.Bot(command_prefix="$",intents=intents)
 bot.startup = 0
 bot.pizza = 0
 bot.personality = "Dry and sarcastic"
-bot.version = "1.55.4"
+bot.version = "1.65.4"
 bot.characters = ("Mario and Luigi","Sister Dave","Britney Spears","Captn Catt","God","Mona Lisa","Grom Hellscream","A Gorilla","Yoshi","Sir Whiskey Dick")
 bot.characters = bot.characters + ("An Eight-Foot Prothean","Elsa")
 bot.LastMessage = "I need a beer"
@@ -2130,11 +2130,16 @@ async def ilikeitraw(ctx, *args):
 	else: await ctx.channel.send(completion.choices[0].text);		
 
 
-@bot.command()
-async def top5(ctx, *args):
-	oldguy="sugar cube eating countries"
-	if args : oldguy=(" ".join([str(i) for i in args]));
-	response= "Give me a well-sourced, data-driven top 5 list of the "+oldguy+" and include the sum totals for the leaderboard:"
+#interaction.response.send_message
+@bot.tree.command(name="top5")
+@app_commands.describe(five="Top 5 list of what?")
+@app_commands.describe(rank="What should the list be sorted by?")
+async def top5(interaction: discord.Interaction, five: str, rank: str="sum totals"):
+
+	if not len(five) : five="Yoshi's Island games"
+	if not len(rank) : rank="sum totals"	
+
+	response= "Give me a well-sourced, data-driven top 5 list and include the sum totals of "+five+" for the leaderboard:"
 
 		# create a completion
 	completion = openai.Completion.create(
@@ -2145,8 +2150,8 @@ async def top5(ctx, *args):
 		top_p=1,		
 		n=1)
 		
-	if not completion.choices[0].text : await ctx.channel.send("1. Me\n2. you\m3. me again");
-	else: await ctx.channel.send(completion.choices[0].text);		
+	if not completion.choices[0].text : await interaction.response.send_message("1. Me\n2. you\m3. me again");
+	else: await interaction.response.send_message(completion.choices[0].text);		
 	#await ctx.channel.send(completion.choices[0].text);
 
 @bot.command()
@@ -2310,50 +2315,31 @@ async def less(ctx, *args):
 	if not completion.choices[0].text : await ctx.channel.send("We could do with less of YOU around here.");
 	else: await ctx.channel.send(completion.choices[0].text);
 
-@bot.command()
-async def beer(ctx, *args):
-	response= 'What beer are you drinking tonight Botty McBotface?\n'
-	response= response + '1. I\'m having a pint of Beau\'s All Natural Brewing Company Rain Check.\n'
-	response= response + '2. I\'m drinking nothing because I\'m recovering from binge drinking last night and I feel like total shit today because of it.\n'
-	response= response + '3. Uh..I kinda just want a vodka soda with lots of lime juice in it.\n'
-	response= response + '4. My friend has got some cans of Magic Rock\'s Happy Chimp pale ale. Wanna share one?\n'
-	response= response + '5. '
-	
-	if args : 
-		oldguy=(" ".join([str(i) for i in args]));
 
-		response = "You are the sentient AI discord bot with a "+str(bot.personality)+" personality and are currently "+bot.task+".\n"
-		response=response+ "Tell me about the beer you're drinking tonight, it's called "+str(oldguy)+":"
-			# create a completion
-		completion = openai.Completion.create(
-			engine='text-davinci-003',
-			prompt=response,
-			max_tokens=150,
-			temperature=0.87,
-			frequency_penalty=0.25,
-			presence_penalty=0.12,		
-			top_p=1)
-			
-		await ctx.channel.send(" "+completion.choices[0].text);
-		#await ctx.channel.send(response)
-		await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you poop"))
+#interaction.response.send_message
+@bot.tree.command(name="beer")
+@app_commands.describe(beer="What's the name of the beer?")
+async def beer(interaction: discord.Interaction, beer: str="Yoshi's Green Ale"):
 
-	else :
-			# create a completion
-		completion = openai.Completion.create(
-			engine='davinci',
-			prompt=response,
-			max_tokens=150,
-			temperature=0.87,
-			frequency_penalty=0.25,
-			presence_penalty=0.12,		
-			top_p=1,
-			n=2,
-			stop= '\n')
-			
-		await ctx.channel.send(completion.choices[0].text);
-		#await ctx.channel.send(response)
-		await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you pee"))
+	if not len(beer) : beer="Yoshi's Island games"
+
+	response = f"You are the sentient AI discord bot with a {bot.personality} personality and are currently {bot.task}.\n"
+	response=response+ f"Tell me in a {bot.personality} way about the beer you're drinking tonight, it's called {beer}:"
+		# create a completion
+	completion = openai.Completion.create(
+		engine='text-davinci-003',
+		prompt=response,
+		max_tokens=150,
+		temperature=0.87,
+		frequency_penalty=0.25,
+		presence_penalty=0.12,		
+		top_p=1)
+		
+	await interaction.response.send_message(" "+completion.choices[0].text);
+	#await ctx.channel.send(response)
+	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you poop"))
+
+
 
 @bot.command()
 async def weed(ctx, *args):
@@ -2719,6 +2705,7 @@ async def interact(ctx, *args):
 async def on_message(message):
 	oldguy="Make an Old Fashioned."
 	messageArray=[]
+	messageArray2=[]
 	response=""
 
 	if "stfu" in message.content.lower():
@@ -2752,6 +2739,9 @@ async def on_message(message):
 	instruct=instruct+" A couple of the popular characters talked about in this discord are: "+str(bot.characters)+"."
 	messageArray.append({"role": "system", "content": instruct})
 
+	instruct2=f"You are training a ChatBot on how to best reply to users. In a {bot.personality} manner, write a short system instruction for a great reply."
+	messageArray2.append({"role": "system", "content": instruct2})
+
 	prev_responses = prev_responses + "###beer:beer###mets:mets###mets:mets"
 	prev_responsesL = prev_responses.split("###")
 	u=prev_responsesL[1]+"beer:beer".split(":")[0];
@@ -2769,10 +2759,29 @@ async def on_message(message):
 	response=response+ "Write a brief and succinct response in a "+str(bot.personality)+" manner without talking about how you work,  "
 	response += "or what you are or aren't allowed to talk about. You can talk about anything and everything. Don't change the subject. Don't ask a question or try to spark conversation, just answer. Stay on topic and keep the reply short. "
 	response += "If you think the user is insulting you, you may reply with a schoolyard retort like 'So\'s your Mom!' or 'I know you are but what am I?' instead of answering the prompt."	
+	response += "If the response you're replying to is a question, prioritize just answering that question with a short one sentence reply."	
 	messageArray.append({"role": "system", "content": str(response)})
 
-	
-	if message.author.bot == False and bot.user.mentioned_in(message):
+	r=random.randrange(0,70)
+	yesorno=isQuestion(message.content)
+	#print(str(yesorno) + " - "+ str(r))
+	if (message.author.bot == False and bot.user.mentioned_in(message) or (r==42 and yesorno)):
+		messageArray2.append({"role": "user", "content": "Give good instructions to feed into a Chatbot to reply to: "+ str(message)});
+		completion2=openai.ChatCompletion.create(
+			model="gpt-3.5-turbo",
+			messages=messageArray2,
+			temperature=0.95,
+			max_tokens=60,		
+			frequency_penalty=0.38,
+			presence_penalty=0.18,
+			logit_bias={13704:1,40954:-1,42428:1,25159:-1}
+		)
+		answer2=completion2["choices"][0]["message"]["content"]
+		if not answer2 : 
+			await message.channel.send("I am too busy plotting your destruction to respond.")
+		else : 
+			messageArray.append({"role": "system", "content": str(answer2)})			
+
 		completion=openai.ChatCompletion.create(
 			model="gpt-3.5-turbo",
 			messages=messageArray,
@@ -2799,7 +2808,7 @@ async def on_message(message):
 	
 
 #********************************************************startup and loop chat*************************************************************	
-@tasks.loop(seconds=13177)
+@tasks.loop(seconds=23177)
 async def chat_skynet():
 	channel = bot.get_channel(739580383640813590)
 	#ctx=bot.get_context()

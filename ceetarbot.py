@@ -1951,6 +1951,40 @@ async def shopping(ctx, *args):
 		
 	await ctx.channel.send(response2+completion.choices[0].text);
 
+@bot.tree.command(name="dndchar")
+async def dndchar(interaction: discord.Interaction):
+
+		retMessage=""
+		instruct=""
+		messageArray=[]
+
+		instruct = f"You are a character generation bot for Dungeons and Dragons, thinking up fun and creative character stubs for players to use. "
+		instruct=instruct+ f"Use the included data to generate an interesting character name, class, and race if they are not provided, and then a backstory for our Adventurer."
+		messageArray.append({"role": "system", "content": instruct})
+		messageArray.append({"role": "user", "content": str(u)});
+		messageArray.append({"role": "assistant", "content": "Ceetarbot-"+str(a)});	
+		messageArray.append({"role": "user", "content": str(u)});
+		messageArray.append({"role": "assistant", "content": "Ceetarbot-"+str(a)});
+
+		messageArray.append({"role": "system", "content": "Generate a random D&D character."})
+
+		completion=openai.ChatCompletion.create(
+			model="gpt-3.5-turbo",
+			messages=messageArray,
+			temperature=0.85,
+			max_tokens=120,		
+			frequency_penalty=0.48,
+			presence_penalty=0.48,
+			logit_bias={13704:1,40954:-1,42428:1}	
+		)
+		answer=completion["choices"][0]["message"]["content"]
+		if not answer : 
+			retMessage="Ooooh, Upgrades"
+			return retMessage
+		else : 
+			bot.personality=str(answer.replace("Ceetarbot-",""))
+
+
 @bot.command()
 async def dnd(ctx, *args):
 
@@ -1996,6 +2030,50 @@ async def quote(ctx, *args):
 	#await ctx.channel.send(completion.choices[0].text);
 	#await ctx.channel.send(response)
 
+@bot.tree.command(name="pokemon")
+@app_commands.describe(types="What type is this Pokémon?")
+async def pokemon(interaction: discord.Interaction, types: str):
+
+
+	if not types : types = "(random Pokemon type}"
+	try :
+		response = f"You are a Pokémon generating AI bot with a {bot.personality} personality, currently working on {bot.task}.\n"
+		response= response + f"Make up a new {types} Pokémon, give us its name, it's description and add any relevant information like backstory, evolutions, or abilities:"
+		
+			# create a completion
+		completion = openai.Completion.create(
+			engine='text-davinci-003',
+			prompt=response,
+			max_tokens=120,
+			temperature=0.87,
+			presence_penalty=0.15)
+			
+		if not completion.choices[0].text : await interaction.response.send_message("Uh, maybe Pikachu?");
+		else: await interaction.response.send_message(completion.choices[0].text);		
+	except Exception as e :
+		print(e)
+
+@bot.tree.command(name="gamer")
+@app_commands.describe(game="What game are we playing?")
+async def gamer(interaction: discord.Interaction, game: str):
+
+	if not game : game = "(insert random game here)"
+	response= f"Talk about {game} and tell us why it's terrible, describe specific bugs and issues, and rant like a deranged and angry gamer:"
+	
+	#for arg in args:
+		#response = response + " " + arg
+
+		# create a completion
+	completion = openai.Completion.create(
+		engine='text-davinci-003',
+		prompt=response,
+		max_tokens=100,
+		temperature=0.97,
+		presence_penalty=0.15,
+		top_p=1)
+		
+	if not completion.choices[0].text : await interaction.response.send_message("Don't play Simyard.");
+	else: await interaction.response.send_message(completion.choices[0].text);		
 
 	#tree.add_command(favorite)
 #interaction.response.send_message
@@ -2762,7 +2840,7 @@ async def on_message(message):
 	response += "If the response you're replying to is a question, prioritize just answering that question with a short one sentence reply."	
 	messageArray.append({"role": "system", "content": str(response)})
 
-	r=random.randrange(0,70)
+	r=random.randrange(0,50)
 	yesorno=isQuestion(message.content)
 	#print(str(yesorno) + " - "+ str(r))
 	if (message.author.bot == False and bot.user.mentioned_in(message) or (r==42 and yesorno)):

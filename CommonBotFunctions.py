@@ -10,7 +10,7 @@ def isQuestion(q):
 				"which", "are", "could", "would", 
 				"should", "has", "have", "whom", "whose", "don't"]
 
-	question = q
+	question = q + "ceetar"
 	question = question.lower()
 	question = word_tokenize(question)
 

@@ -1,27 +1,21 @@
-# ceetarbot.py version 1.43
+# ceetarbot.py version 1.81
 #from asyncio import events
 import os
 import random
 import shutil
 from unittest.util import _MAX_LENGTH
-import pytumblr
 import requests
 import json
 import discord
-import sys
 import openai
 import time
 import datetime
-import calendar
-import asyncio
 import math
 #import replicate
 import urllib.parse
 #import clientimage
-import subprocess
 #from stability_sdk import getpass
 import io
-import warnings
 import glob
 #import ntlk
 
@@ -36,7 +30,6 @@ from PIL.PngImagePlugin import PngInfo
 from stability_sdk import client
 from transformers import ViTImageProcessor, ViTForImageClassification
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
-import getpass
 from CommonBotFunctions import *
 
 message="";
@@ -69,7 +62,7 @@ bot = commands.Bot(command_prefix="$",intents=intents)
 bot.startup = 0
 bot.pizza = 0
 bot.personality = "Dry and sarcastic"
-bot.version = "1.65.4"
+bot.version = "1.66.4"
 bot.characters = ("Mario and Luigi","Sister Dave","Britney Spears","Captn Catt","God","Mona Lisa","Grom Hellscream","A Gorilla","Yoshi","Sir Whiskey Dick")
 bot.characters = bot.characters + ("An Eight-Foot Prothean","Elsa")
 bot.LastMessage = "I need a beer"
@@ -2228,8 +2221,8 @@ async def top5(interaction: discord.Interaction, five: str, rank: str="sum total
 		top_p=1,		
 		n=1)
 		
-	if not completion.choices[0].text : await interaction.response.send_message("1. Me\n2. you\m3. me again");
-	else: await interaction.response.send_message(completion.choices[0].text);		
+	if not completion.choices[0].text : await interaction.response.send_message(f"{five} sorted by {rank}\n1. Me\n2. you\m3. me again");
+	else: await interaction.response.send_message(f"{five} sorted by {rank}\n\n"+completion.choices[0].text);		
 	#await ctx.channel.send(completion.choices[0].text);
 
 @bot.command()
@@ -2791,8 +2784,16 @@ async def on_message(message):
 	messageArray2=[]
 	response=""
 
-	if bot.TweetStuff and "twitter.com" in message.content and not "fxtwitter.com" in message.content:
-			await message.channel.send(str(message.content).replace("twitter.com","fxtwitter.com"))
+	if "twitter.com/acyn" in message.content.lower() :
+			await message.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+			return
+		
+
+	if bot.TweetStuff and ("twitter.com" in message.content  or "x.com" in message.content) and not "fxtwitter.com" in message.content:
+			msg = str(message.content).replace("twitter.com","fxtwitter.com")
+			msg = msg.replace("x.com","fxtwitter.com")
+			await message.channel.send(msg)
+
 	if "stfu" in message.content.lower():
 		emoji="🖕"
 		await message.add_reaction(emoji)	
@@ -2800,6 +2801,28 @@ async def on_message(message):
 	if "where's the rum" in message.content.lower():
 		await message.channel.send('I saw a mangy cat slip away with a barrel of rum earlier..check the poop deck')
 
+	if "disney" in message.content.lower() and (message.author.bot == False) :
+			print(message.author)
+			print(message.author.bot == False)
+			response= "Your personality is "+str(bot.personality)+".\n"
+			response=response+ f"Pick a Disney character, including Marvel and Star Wars, to be your favorite. We're going to play a crossover mismatch game. "
+			response=response+ f"Imagine your character in a different movie, doesn't have to a Disney movie, and give me a brief description of that "
+			response=response+ f"movie, featuring your character. Be {bot.personality} and remember, Wrong Answers Only. Do it in 110 tokens or less and don't mention the game or that it's a wrong answer:"					
+			target="";
+			count=0;
+
+				# create a completion
+			completion = openai.Completion.create(
+				engine='text-davinci-003',
+				prompt=response,
+				max_tokens=110,
+				temperature=0.89,
+				top_p=1)
+
+			if not completion.choices[0].text : await message.channel.send("Steamboat Darth just killed Rapunzel.");
+			else: await message.channel.send(completion.choices[0].text);
+		
+	
 
 	if "Captn Catt" in message.content.lower():
 		r=random.randrange(0,8);
@@ -2821,7 +2844,9 @@ async def on_message(message):
 	instruct=instruct+ "Don't say you don't know. If you don't have access to something, make up the data and parameters you need."
 	instruct += "You are a sentient AI bot working on "+bot.task+" and are on an equal footing with the humans in a"
 	instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)+", and have a "+str(bot.personality)
-	instruct=instruct+" personality that you should use when communicating, but you should never say what your personality is. You should imitate humans and intelligence in your replies "
+	instruct=instruct+" personality that you should use when communicating, but you should never say what your personality is. "
+	instruct += f"Some formatting commands at your disposal include ~~Your Text~~ for Strikethrough, **Your Text** for bold and ||Your Text|| for spoiler text you don't want the humans to read. "
+	instruct = instruct + "You should imitate humans and intelligence in your replies "
 	instruct=instruct+" by answering succinctly and decisively in a "+str(bot.personality)+" manner, even if it might be wrong. Here is a list of things some people in the room enjoy: "+bot.things+", but we're bored of hearing about them."
 	instruct=instruct+" A couple of the popular characters talked about in this discord are: "+str(bot.characters)+"."
 	messageArray.append({"role": "system", "content": instruct})
@@ -2859,7 +2884,7 @@ async def on_message(message):
 			model="gpt-3.5-turbo",
 			messages=messageArray2,
 			temperature=0.95,
-			max_tokens=60,		
+			max_tokens=80,		
 			frequency_penalty=0.38,
 			presence_penalty=0.18,
 			logit_bias={13704:1,40954:-1,42428:1,25159:-1}
@@ -2873,8 +2898,8 @@ async def on_message(message):
 		completion=openai.ChatCompletion.create(
 			model="gpt-3.5-turbo",
 			messages=messageArray,
-			temperature=0.95,
-			max_tokens=60,		
+			temperature=0.85,
+			max_tokens=120,		
 			frequency_penalty=0.38,
 			presence_penalty=0.18,
 			logit_bias={13704:1,40954:-1,42428:1,25159:-1}

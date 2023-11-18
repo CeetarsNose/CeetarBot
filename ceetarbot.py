@@ -12,7 +12,6 @@ import time
 import datetime
 import math
 #import replicate
-import urllib.parse
 #import clientimage
 #from stability_sdk import getpass
 import io
@@ -24,7 +23,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from discord import app_commands
-from IPython.display import display
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from stability_sdk import client
@@ -193,6 +191,28 @@ async def holiday(interaction: discord.Interaction, country: str):
 
 	if not completion.choices[0].text : await interaction.response.send_message("PTO request denied.");
 	else: await interaction.response.send_message(completion.choices[0].text);
+
+
+@bot.tree.command(name="locate")
+@app_commands.describe(who="Who are we locating?")
+@app_commands.describe(where="Where are they?")
+async def locate(interaction: discord.Interaction, who: str, where: str):
+
+	response = f"Hi there, we're playing a game of make believe where you are making up fictitious"
+	response += f" entries in a log of {who}'s GPS whereabouts around their {where} vacation. Please imagine a log entry of less than 100 tokens featuring their location"
+	response += f" and their latitude and longitude."
+
+	answer =f"Location of {who} in {where}\n"
+		# create a completion
+	completion = openai.Completion.create(
+		engine='text-davinci-003',
+		prompt=response,
+		max_tokens=110,
+		temperature=0.79,
+		top_p=1)
+
+	if not completion.choices[0].text : await interaction.response.send_message(answer+"Not on this plane.");
+	else: await interaction.response.send_message(answer + completion.choices[0].text);
 
 
 	#tree.add_command(favorite)
@@ -2783,11 +2803,22 @@ async def on_message(message):
 	messageArray=[]
 	messageArray2=[]
 	response=""
-
-	if "twitter.com/acyn" in message.content.lower() :
-			await message.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-			return
+	hasimage=False
+	imageURL=""
+	# if "twitter.com/acyn" in message.content.lower() :
+	# 		await message.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+	# 		return
 		
+	if message.attachments:
+		for attachment in message.attachments:
+			print(attachment.content_type)
+			if attachment.content_type == "image/jpeg" or attachment.content_type == "image/jpg" or attachment.content_type == "image/png" or attachment.content_type == "image/gif" :
+				print("The message has an image")
+				hasImage = True
+				imageURL=attachment.url
+			else:
+				print("The message does not have an image")
+
 
 	if bot.TweetStuff and ("twitter.com" in message.content  or "x.com" in message.content) and not "fxtwitter.com" in message.content:
 			msg = str(message.content).replace("twitter.com","fxtwitter.com")
@@ -2801,26 +2832,26 @@ async def on_message(message):
 	if "where's the rum" in message.content.lower():
 		await message.channel.send('I saw a mangy cat slip away with a barrel of rum earlier..check the poop deck')
 
-	if "disney" in message.content.lower() and (message.author.bot == False) :
-			print(message.author)
-			print(message.author.bot == False)
-			response= "Your personality is "+str(bot.personality)+".\n"
-			response=response+ f"Pick a Disney character, including Marvel and Star Wars, to be your favorite. We're going to play a crossover mismatch game. "
-			response=response+ f"Imagine your character in a different movie, doesn't have to a Disney movie, and give me a brief description of that "
-			response=response+ f"movie, featuring your character. Be {bot.personality} and remember, Wrong Answers Only. Do it in 110 tokens or less and don't mention the game or that it's a wrong answer:"					
-			target="";
-			count=0;
+	# if "disney" in message.content.lower() and (message.author.bot == False) :
+	# 		print(message.author)
+	# 		print(message.author.bot == False)
+	# 		response= "Your personality is "+str(bot.personality)+".\n"
+	# 		response=response+ f"Pick a Disney character, including Marvel and Star Wars, to be your favorite. We're going to play a crossover mismatch game. "
+	# 		response=response+ f"Imagine your character in a different movie, doesn't have to a Disney movie, and give me a brief description of that "
+	# 		response=response+ f"movie, featuring your character. Be {bot.personality} and remember, Wrong Answers Only. Do it in 110 tokens or less and don't mention the game or that it's a wrong answer:"					
+	# 		target="";
+	# 		count=0;
 
-				# create a completion
-			completion = openai.Completion.create(
-				engine='text-davinci-003',
-				prompt=response,
-				max_tokens=110,
-				temperature=0.89,
-				top_p=1)
+	# 			# create a completion
+	# 		completion = openai.Completion.create(
+	# 			engine='text-davinci-003',
+	# 			prompt=response,
+	# 			max_tokens=110,
+	# 			temperature=0.89,
+	# 			top_p=1)
 
-			if not completion.choices[0].text : await message.channel.send("Steamboat Darth just killed Rapunzel.");
-			else: await message.channel.send(completion.choices[0].text);
+	# 		if not completion.choices[0].text : await message.channel.send("Steamboat Darth just killed Rapunzel.");
+	# 		else: await message.channel.send(completion.choices[0].text);
 		
 	
 
@@ -2881,7 +2912,7 @@ async def on_message(message):
 	if (message.author.bot == False and bot.user.mentioned_in(message) or (r==42 and yesorno)):
 		messageArray2.append({"role": "user", "content": "Give good instructions to feed into an LLM to generate a good humanlike reply to: "+ str(message)});
 		completion2=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+			model="gpt-4-1106-preview",
 			messages=messageArray2,
 			temperature=0.95,
 			max_tokens=80,		
@@ -2893,21 +2924,45 @@ async def on_message(message):
 		if not answer2 : 
 			await message.channel.send("I am too busy plotting your destruction to respond.")
 		else : 
-			messageArray.append({"role": "system", "content": str(answer2)})			
+			messageArray.append({"role": "system", "content": str(answer2)})	
 
-		completion=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
-			messages=messageArray,
-			temperature=0.85,
-			max_tokens=120,		
-			frequency_penalty=0.38,
-			presence_penalty=0.18,
-			logit_bias={13704:1,40954:-1,42428:1,25159:-1}
-		)
-		answer=completion["choices"][0]["message"]["content"]
-		if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
-		else : 
-			await message.channel.send(answer.replace("Ceetarbot-",""))
+		if hasimage :
+			messageArray.append({"role": "user", "content": [
+        {"type": "text", "text": "Use what's in this image to help frame your response."},
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": imageURL,
+          },
+        },
+      ]});
+			completion=openai.ChatCompletion.create(
+				model="gpt-4-vision-preview",
+				messages=messageArray,
+				temperature=0.85,
+				max_tokens=120,		
+				frequency_penalty=0.38,
+				presence_penalty=0.18,
+				logit_bias={13704:1,40954:-1,42428:1,25159:-1}
+			)
+			answer=completion["choices"][0]["message"]["content"]
+			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
+			else : 
+				await message.channel.send(answer.replace("Ceetarbot-",""))
+		else:
+			completion=openai.ChatCompletion.create(
+				model="gpt-4-1106-preview",
+				messages=messageArray,
+				temperature=0.85,
+				max_tokens=120,		
+				frequency_penalty=0.38,
+				presence_penalty=0.18,
+				logit_bias={13704:1,40954:-1,42428:1,25159:-1}
+			)
+			answer=completion["choices"][0]["message"]["content"]
+			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
+			else : 
+				await message.channel.send(answer.replace("Ceetarbot-",""))
 
 
 		prev_responses = str(prev_responsesL[1])+"###"+str(prev_responsesL[2]) + "###"+str(message.author).lower()[0:str(message.author).find("#")]+"-"+message.content.replace("<@801616557230522409>","")+":"+str(answer).lstrip()

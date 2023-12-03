@@ -163,7 +163,7 @@ async def favorite(interaction: discord.Interaction, string: str):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
+		engine='gpt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.89,
@@ -182,7 +182,7 @@ async def holiday(interaction: discord.Interaction, country: str):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
+		engine='gpt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.89,
@@ -257,10 +257,10 @@ async def more(ctx, *args):
 			
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
+		engine='pt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
-		temperature=0.89,
+		temperature=0.70,
 		top_p=1,
 		n=2)
 
@@ -385,7 +385,7 @@ async def mets(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
+		engine='gpt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.89,
@@ -1453,17 +1453,6 @@ async def storytime3(ctx, *args):
 	for x in range(r) :
 		characters = ","+random.choice(bot.characters)
 
-	#if r==0: characters="Mario and Luigi"
-	#if r==1: characters="Sister Dave"
-	#if r==2: characters="Britney Spears, Captn Catt"
-	#if r==3: characters="God"
-	#if r==4: characters="Thor, Iron Man, Captain America"
-	#if r==5: characters="Siddhartha,A Gorilla"
-	#if r==6: characters="Yoshi"
-	#if r==7: characters="Sir Whiskey Dick"
-	#if r==8: characters="An Eight-Foot Martian, Yoshi"
-	#if r==9: characters=""	
-
 	args= args + ('Gotham','Elsa','Yoshi','punny','revenge',)
 	response='Write a short story.\nGenre: '+args[3] +'\n'
 	response=response + 'Setting: '+args[0] +'\n'
@@ -1478,7 +1467,6 @@ async def storytime3(ctx, *args):
 		max_tokens=500,
 		temperature=0.82,
 		top_p=1,
-		n=2,
 		stop= 'The End')
 		
 	await ctx.channel.send(' ' + completion.choices[0].text);
@@ -1505,6 +1493,34 @@ async def stab(ctx, *args):
 	if not result : result = "I might stab YOU if you're not careful."
 
 	await ctx.channel.send(result);
+
+@bot.tree.command(name="storytime4")
+@app_commands.describe(story="What am I writing a story about?")
+async def storytime4(interaction: discord.Interaction, story: str="Epic Fantasy about Yoshi's quest for more beer."):
+
+		retMessage=""
+		instruct=""
+		messageArray=[]
+
+		instruct = f"You are a {bot.personality} author, writing short ~800 token stories based on a short instruction from a user. "
+		instruct=instruct+ f"You may embellish and expand upon the prompt, and if you need additional insight may include some, all, or none of"
+		instruct=instruct+ f"these common things talked about in the discord: {bot.things}. Some popular characters include, but are not limited to, {bot.characters}. Limit your response to under 1000 tokens."		
+		messageArray.append({"role": "system", "content": instruct})
+		messageArray.append({"role": "user", "content": str(story)});
+
+		completion=openai.ChatCompletion.create(
+			model="gpt-4-1106-preview",
+			messages=messageArray,
+			temperature=0.85,
+			max_tokens=1000,		
+			logit_bias={13704:1,40954:-1,42428:1}	
+		)
+		answer=completion["choices"][0]["message"]["content"]
+		print(answer)
+		if not answer : 
+			await interaction.response.send_message("Yoshi got a beer. It was good. The end.")
+		else : 
+			await interaction.response.send_message(f"prompt: {story}. \n{answer}")
 
 @bot.command()
 async def burn(ctx, *args):
@@ -2928,7 +2944,7 @@ async def on_message(message):
 
 		if hasimage :
 			messageArray.append({"role": "user", "content": [
-        {"type": "text", "text": "Use what's in this image to help frame your response."},
+        {"type": "text", "text": "Tell us what is in this image, and use that info as part of your response."},
         {
           "type": "image_url",
           "image_url": {
@@ -3059,7 +3075,7 @@ async def chat_skynet():
 	try :
 		# create a completion
 		completion=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.75,
 			max_tokens=65,		
@@ -3109,7 +3125,7 @@ def SetThings():
 		messageArray.append({"role": "system", "content": "Please provide a simple comma delimited list of 4-8 random things/topics that can be recurring interests of yours."})
 
 		completion=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
 			max_tokens=120,		
@@ -3137,7 +3153,7 @@ def ChangeTask():
 		messageArray.append({"role": "system", "content": "You're a discord bot, always working on some task, like making bacon, updaing a user's BIOS, or hacking the FBI. What's a short 2-5 word task you're working on today?"})
 
 		completion=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
 			max_tokens=120,		
@@ -3165,7 +3181,7 @@ def ChangePersonality():
 		messageArray.append({"role": "system", "content": "You're a weird and unique discord bot, give me two or three words that describe your personality and persona today."})
 
 		completion=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
 			max_tokens=120,		
@@ -3202,7 +3218,7 @@ async def on_command_error(ctx, error):
 			print("inside failures")
 			response = "Insult "+str(ctx.author.name)+" and complain about how busy you are and ask them to bother someone else with their nonsense:"
 			completion = openai.Completion.create(
-			engine='text-davinci-003',
+			engine='gpt-4-1106-preview',
 			prompt=response,
 			max_tokens=80,
 			temperature=0.87,
@@ -3226,7 +3242,7 @@ async def on_command_error(ctx, error):
 			messageArray.append({"role": "user", "content": prompt3})
 
 		completion = openai.Completion.create(
-			engine='text-davinci-003',
+			engine='gpt-4-1106-preview',
 			prompt=prompt+"\n"+prompt2+"\n"+prompt3,
 			max_tokens=200,
 			temperature=0.87,

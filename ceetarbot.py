@@ -205,8 +205,7 @@ async def locate(interaction: discord.Interaction, who: str, where: str):
 	answer =f"Location of {who} in {where}\n"
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.79,
 		top_p=1)
@@ -277,8 +276,7 @@ async def racism(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=50,
 		temperature=0.89,
 		top_p=1,
@@ -344,8 +342,7 @@ async def bodies(interaction: discord.Interaction):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -363,8 +360,7 @@ async def fixbaseball(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=210,
 		temperature=0.89,
 		top_p=1,
@@ -936,8 +932,7 @@ async def response(interaction: discord.Interaction,who: str):
 			
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1)
@@ -949,8 +944,7 @@ async def response(interaction: discord.Interaction,who: str):
 """ 	time.sleep(40)
 		# create a completion
 	completion = openai.Completion.create(
-		engine='davinci',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -1003,8 +997,7 @@ async def respond(ctx, *args):
 			
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1)
@@ -1016,8 +1009,7 @@ async def respond(ctx, *args):
 	time.sleep(40)
 		# create a completion
 	completion = openai.Completion.create(
-		engine='davinci',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -1038,8 +1030,7 @@ async def boring(ctx, *args):
 
 		response = "Tell  "+str(ctx.author.name)+" that they are by far the most boring and tiresome member of this community and give them suggestions on better places they could spend their time:"
 		completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=140,
 		temperature=0.97,
 		frequency_penalty=0.4,
@@ -1050,8 +1041,7 @@ async def boring(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=210,
 		temperature=0.97,
 		frequency_penalty=0.2,
@@ -1080,8 +1070,7 @@ async def sim(ctx, *args):
 		print("inside random")
 		response = "Tell  "+str(ctx.author.name)+" that you want them to stop bothering you and go outside and touch grass or something else besides asking you things:"
 		completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.97,
 		frequency_penalty=0.1,
@@ -1093,8 +1082,7 @@ async def sim(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.97,
 		frequency_penalty=0.3,
@@ -1117,8 +1105,7 @@ async def battle(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.95,
 		presence_penalty= 0.45,
@@ -1139,8 +1126,7 @@ async def bartender(ctx, *args):
 	response = response + " has come up, the story of how he created it, and how to make it:"
 	
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.85,
 		presence_penalty= 0.25,
@@ -1164,8 +1150,7 @@ async def drink(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.85,
 		presence_penalty= 0.25,
@@ -1222,8 +1207,7 @@ async def postcard(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=250,
 		temperature=0.85,
 		presence_penalty= 0.25,
@@ -1246,8 +1230,7 @@ async def rager(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.95,
 		presence_penalty= 0.25,
@@ -1275,8 +1258,7 @@ async def prescribe(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=180,
 		temperature=0.95,
 		presence_penalty= 0.25,
@@ -1294,8 +1276,7 @@ async def upgrade(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=75,
 		temperature=0.88,
 		presence_penalty= 0.29,
@@ -1338,8 +1319,7 @@ async def whowon(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.70,
 		top_p=1,
@@ -1378,8 +1358,7 @@ async def enjoy(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt="You now enjoy "+oldguy+". Make up a fun reason why you like it. Remember to be "+str(bot.personality)+":",
+		engine='gpt-3.5-turbo-instruct',prompt="You now enjoy "+oldguy+". Make up a fun reason why you like it. Remember to be "+str(bot.personality)+":",
 		max_tokens=80,
 		temperature=0.95,
 		presence_penalty= 0.25,
@@ -1408,8 +1387,7 @@ async def storytime(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=400,
 		temperature=0.78,
 		top_p=1,
@@ -1435,8 +1413,7 @@ async def storytime2(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=400,
 		temperature=0.78,
 		top_p=1,
@@ -1462,8 +1439,7 @@ async def storytime3(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=500,
 		temperature=0.82,
 		top_p=1,
@@ -1481,8 +1457,7 @@ async def stab(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.99,
 		presence_penalty= 0.21,
@@ -1533,8 +1508,7 @@ async def burn(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.99,
 		presence_penalty= 0.21,
@@ -1562,8 +1536,7 @@ async def simyard(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='davinci',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.99,
 		presence_penalty= 0.11,
@@ -1581,8 +1554,7 @@ async def awake(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.90,
 		top_p=1)
@@ -1600,8 +1572,7 @@ async def sleep(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.90,
 		top_p=1)
@@ -1622,8 +1593,7 @@ async def hallmark(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='davinci',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		frequency_penalty=0.15,
@@ -1649,8 +1619,7 @@ async def soold(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.88,
 		frequency_penalty=0.07,
@@ -1673,8 +1642,7 @@ async def origin(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=180,
 		temperature=0.88,
 		frequency_penalty=0.27,
@@ -1693,8 +1661,7 @@ async def fortune(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=70,
 		temperature=0.88,
 		top_p=1)
@@ -1710,8 +1677,7 @@ async def love(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1735,8 +1701,7 @@ async def catch(ctx, *args):
 	
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1759,8 +1724,7 @@ async def roast(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1785,8 +1749,7 @@ async def waffle(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1809,8 +1772,7 @@ async def fml(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=60,
 		temperature=0.89,
 		frequency_penalty=0.34,
@@ -1835,8 +1797,7 @@ async def feature(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.77,
 		presence_penalty=0.15,
@@ -1861,8 +1822,7 @@ async def joke(ctx, *args):
 		print("inside joke")
 		response = "Insult "+str(ctx.author.name)+" and complain about how busy you are and ask them to bother someone else:"
 		completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.87,
 		frequency_penalty=0.4,
@@ -1874,8 +1834,7 @@ async def joke(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.87,
 		frequency_penalty=0.2,
@@ -1893,8 +1852,7 @@ async def sentient(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=209,
 		temperature=0.80,
 		top_p=1,
@@ -1916,8 +1874,7 @@ async def trolley(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.91,
 		presence_penalty=0.27,
@@ -1935,8 +1892,7 @@ async def sport(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.91,
 		top_p=1)
@@ -1970,8 +1926,7 @@ async def shopping(ctx, *args):
 	response+= str(item)+'.'
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response + response2,
+		engine='gpt-3.5-turbo-instruct',prompt=response + response2,
 		max_tokens=100,
 		temperature=0.92,
 		presence_penalty=0.35,
@@ -2022,8 +1977,7 @@ async def dnd(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2047,8 +2001,7 @@ async def quote(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2071,8 +2024,7 @@ async def pokemon(interaction: discord.Interaction, types: str):
 		
 			# create a completion
 		completion = openai.Completion.create(
-			engine='text-davinci-003',
-			prompt=response,
+			engine='gpt-3.5-turbo-instruct',	prompt=response,
 			max_tokens=120,
 			temperature=0.87,
 			presence_penalty=0.15)
@@ -2094,8 +2046,7 @@ async def gamer(interaction: discord.Interaction, game: str):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2118,8 +2069,7 @@ async def birthday(interaction: discord.Interaction, birthdayer: str):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2142,8 +2092,7 @@ async def life(interaction: discord.Interaction, thing: str):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.85,
 		presence_penalty=0.15,
@@ -2165,8 +2114,7 @@ async def movie(interaction: discord.Interaction, title: str, genre: str="blockb
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2186,8 +2134,7 @@ async def miraclegro(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.87,
 		presence_penalty=0.35,
@@ -2226,8 +2173,7 @@ async def ilikeitraw(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=150,
 		temperature=0.77,
 		top_p=1,		
@@ -2250,8 +2196,7 @@ async def top5(interaction: discord.Interaction, five: str, rank: str="sum total
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.77,
 		top_p=1,		
@@ -2353,8 +2298,7 @@ async def oracle(ctx, *args):
 	response = "Previous Responses: "+str(prev_responsesL[0])+str(prev_responsesL[1])+str(prev_responsesL[2])+response
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=150,
 		temperature=0.89,
 		presence_penalty=0.35,
@@ -2381,7 +2325,7 @@ async def realize(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-  model="text-davinci-003",
+  model="gpt-3.5-turbo-instruct",
   prompt="This is a stark-raving mad conspiracy theory about "+oldguy+" that is making the rounds on social media: So we all realize ",
   suffix=" right?",
   temperature=0.85,
@@ -2411,8 +2355,7 @@ async def less(ctx, *args):
 			
 		# create a completion
 	completion = openai.Completion.create(
-		engine='davinci',
-		prompt="Give me the tl:dr of this: "+response,
+		engine='gpt-3.5-turbo-instruct',prompt="Give me the tl:dr of this: "+response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -2434,8 +2377,7 @@ async def beer(interaction: discord.Interaction, beer: str="Yoshi's Green Ale"):
 	response=response+ f"Tell me in a {bot.personality} way about the beer you're drinking tonight, it's called {beer}:"
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=150,
 		temperature=0.87,
 		frequency_penalty=0.25,
@@ -2464,8 +2406,7 @@ async def weed(ctx, *args):
 		response=response+ "Tell me about this new strain of cannibis you've purchased called "+str(oldguy)+":"
 			# create a completion
 		completion = openai.Completion.create(
-			engine='text-davinci-003',
-			prompt=response,
+			engine='gpt-3.5-turbo-instruct',	prompt=response,
 			max_tokens=150,
 			temperature=0.87,
 			frequency_penalty=0.25,
@@ -2479,8 +2420,7 @@ async def weed(ctx, *args):
 	else :
 			# create a completion
 		completion = openai.Completion.create(
-			engine='text-davinci-003',
-			prompt=response,
+			engine='gpt-3.5-turbo-instruct',	prompt=response,
 			max_tokens=120,
 			temperature=0.97,
 			frequency_penalty=0.31,
@@ -2504,8 +2444,7 @@ async def pajamas(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=60,
 		temperature=0.97,
 		frequency_penalty=0.31,
@@ -2532,8 +2471,7 @@ async def translate(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=60,
 		temperature=0.70,	
 		top_p=1)
@@ -2557,8 +2495,7 @@ async def wager(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.87,
 		frequency_penalty=0.11,
@@ -2674,8 +2611,7 @@ async def gift(ctx, *args):
 
 		# create a completion
 	completion = openai.Completion.create(
-		engine='text-davinci-003',
-		prompt=response,
+		engine='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=180,
 		temperature=0.87,
 		frequency_penalty=0.2,
@@ -2860,7 +2796,7 @@ async def on_message(message):
 
 	# 			# create a completion
 	# 		completion = openai.Completion.create(
-	# 			engine='text-davinci-003',
+	# 			engine='gpt-3.5-turbo-instruct',
 	# 			prompt=response,
 	# 			max_tokens=110,
 	# 			temperature=0.89,

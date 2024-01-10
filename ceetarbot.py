@@ -29,6 +29,9 @@ from stability_sdk import client
 from transformers import ViTImageProcessor, ViTForImageClassification
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 from CommonBotFunctions import *
+#from google.cloud import aiplatform
+from vertexai.language_models import ChatModel, InputOutputTextPair
+
 
 message="";
 message2="";
@@ -241,6 +244,30 @@ async def imageold(interaction: discord.Interaction):
 		#await interaction.response.send_message(file=im);
 		#await interaction.response.send_message(im.filename);
 
+@bot.tree.command(name="imagen")
+@app_commands.describe(prompt="Image Prompt")
+async def imagen(interaction: discord.Interaction, prompt: str):
+
+		# duh=aiplatform.generate_images(        
+        #     prompt=prompt,
+        #     negative_prompt="out of focus",
+        #     number_of_images=1,
+        #     # b/295946075 The service stopped supporting image sizes.
+        #     width=None,
+        #     height=None,
+        #     guidance_scale=10
+        # )
+		print("hi")
+		print(duh)
+	
+		dirt_path = r'C:\Users\Ceetar\image*.png'
+		res=glob.glob(dirt_path)
+		imagepath=""
+		imagepath=str(random.choice(res))
+		im2= Image.open(imagepath)
+		im=discord.File(imagepath)
+
+
 @bot.command()
 async def more(ctx, *args):
 
@@ -256,7 +283,7 @@ async def more(ctx, *args):
 			
 		# create a completion
 	completion = openai.Completion.create(
-		engine='pt-4-1106-preview',
+		engine='gpt-3.5-turbo-instruct',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.70,
@@ -2192,13 +2219,13 @@ async def top5(interaction: discord.Interaction, five: str, rank: str="sum total
 	if not len(five) : five="Yoshi's Island games"
 	if not len(rank) : rank="sum totals"	
 
-	response= "Give me a well-sourced, data-driven top 5 list and include the sum totals of "+five+" for the leaderboard:"
+	response= "Give me a well-sourced, data-driven 200 token top 5 list and include the sum totals of "+five+" for the leaderboard:"
 
 		# create a completion
 	completion = openai.Completion.create(
 		engine='gpt-3.5-turbo-instruct',prompt=response,
-		max_tokens=100,
-		temperature=0.77,
+		max_tokens=200,
+		temperature=0.87,
 		top_p=1,		
 		n=1)
 		
@@ -2755,7 +2782,7 @@ async def on_message(message):
 	messageArray=[]
 	messageArray2=[]
 	response=""
-	hasimage=False
+	hasImage=False
 	imageURL=""
 	# if "twitter.com/acyn" in message.content.lower() :
 	# 		await message.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
@@ -2769,6 +2796,7 @@ async def on_message(message):
 				hasImage = True
 				imageURL=attachment.url
 			else:
+				hasImage = False
 				print("The message does not have an image")
 
 
@@ -2878,7 +2906,7 @@ async def on_message(message):
 		else : 
 			messageArray.append({"role": "system", "content": str(answer2)})	
 
-		if hasimage :
+		if hasImage :
 			messageArray.append({"role": "user", "content": [
         {"type": "text", "text": "Tell us what is in this image, and use that info as part of your response."},
         {
@@ -2894,8 +2922,7 @@ async def on_message(message):
 				temperature=0.85,
 				max_tokens=120,		
 				frequency_penalty=0.38,
-				presence_penalty=0.18,
-				logit_bias={13704:1,40954:-1,42428:1,25159:-1}
+				presence_penalty=0.18
 			)
 			answer=completion["choices"][0]["message"]["content"]
 			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
@@ -3176,6 +3203,8 @@ async def on_command_error(ctx, error):
 			messageArray.append({"role": "system", "content": prompt})			
 			messageArray.append({"role": "system", "content": prompt2})
 			messageArray.append({"role": "user", "content": prompt3})
+
+
 
 		completion = openai.Completion.create(
 			engine='gpt-4-1106-preview',

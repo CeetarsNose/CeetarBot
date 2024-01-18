@@ -43,6 +43,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 YOSHI= os.getenv('YOSHI_KEY')
 openai.api_key = os.getenv('OPENAI_API_KEY')
+oiclient = openai.OpenAI(organization='org-eiNl8e4nk93VLQFDb4EBz9JG')
+
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 stability_api = client.StabilityInference(
     key=os.getenv('STABILITY_KEY'), 
@@ -62,8 +64,9 @@ bot = commands.Bot(command_prefix="$",intents=intents)
 #bot = commands.Bot(command_prefix='$', help_command=None)
 bot.startup = 0
 bot.pizza = 0
+bot.TopicPrompt = "Various things are happening in the discord today, including algebra tests, Calvinball games, and drawing pictures of watermelons."
 bot.personality = "Dry and sarcastic"
-bot.version = "1.66.4"
+bot.version = "1.76.4"
 bot.characters = ("Mario and Luigi","Sister Dave","Britney Spears","Captn Catt","God","Mona Lisa","Grom Hellscream","A Gorilla","Yoshi","Sir Whiskey Dick")
 bot.characters = bot.characters + ("An Eight-Foot Prothean","Elsa")
 bot.LastMessage = "I need a beer"
@@ -165,8 +168,8 @@ async def favorite(interaction: discord.Interaction, string: str):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-4-1106-preview',
+	completion = oiclient.completions.create(
+		model='gpt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.89,
@@ -184,8 +187,8 @@ async def holiday(interaction: discord.Interaction, country: str):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-4-1106-preview',
+	completion = oiclient.completions.create(
+		model='gpt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.89,
@@ -207,8 +210,8 @@ async def locate(interaction: discord.Interaction, who: str, where: str):
 
 	answer =f"Location of {who} in {where}\n"
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.79,
 		top_p=1)
@@ -282,8 +285,8 @@ async def more(ctx, *args):
 			break;
 			
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.70,
@@ -302,8 +305,8 @@ async def racism(ctx, *args):
 	count=0;
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=50,
 		temperature=0.89,
 		top_p=1,
@@ -368,8 +371,8 @@ async def bodies(interaction: discord.Interaction):
 	count=0;
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -386,8 +389,8 @@ async def fixbaseball(ctx, *args):
 	count=0;
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=210,
 		temperature=0.89,
 		top_p=1,
@@ -407,8 +410,8 @@ async def mets(ctx, *args):
 	count=0;
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-4-1106-preview',
+	completion = oiclient.completions.create(
+		model='gpt-4-1106-preview',
 		prompt=response,
 		max_tokens=110,
 		temperature=0.89,
@@ -958,8 +961,8 @@ async def response(interaction: discord.Interaction,who: str):
 			
 			
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1)
@@ -970,8 +973,8 @@ async def response(interaction: discord.Interaction,who: str):
 
 """ 	time.sleep(40)
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -1023,8 +1026,8 @@ async def respond(ctx, *args):
 			
 			
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1)
@@ -1035,13 +1038,11 @@ async def respond(ctx, *args):
 
 	time.sleep(40)
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.89,
-		top_p=1,
-		n=2,
-		stop= '\n')
+		top_p=1)
 
 	await ctx.channel.send(completion.choices[0].text)
 
@@ -1056,8 +1057,8 @@ async def boring(ctx, *args):
 	if rannum < 8:
 
 		response = "Tell  "+str(ctx.author.name)+" that they are by far the most boring and tiresome member of this community and give them suggestions on better places they could spend their time:"
-		completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+		completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=140,
 		temperature=0.97,
 		frequency_penalty=0.4,
@@ -1067,8 +1068,8 @@ async def boring(ctx, *args):
 		return
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=210,
 		temperature=0.97,
 		frequency_penalty=0.2,
@@ -1085,7 +1086,7 @@ async def boring(ctx, *args):
 @bot.command()
 async def sim(ctx, *args):
 	response = 'A list of silly time-wasting web game simulations based loosely on real life:\n'
-	response=response+ '1. Simyard: A baseball management sim with a wicked physics engine. This one\'s competitive, but broken and poorly supportive.\n'
+	response=response+ '1. Simyard: A baseball management sim with a wicked physics model. This one\'s competitive, but broken and poorly supportive.\n'
 	response= response + '2. Simballoon: This inflatable sim has you creating different sizes, shapes, and flavors of balloons in a competitive arena.\n'
 	response= response + '3. Simskillet: players mix flavor and technique in this cooking sim with a intuitive UI where the goal is to transform the dish into something delicious.\n'
 	response= response + '4. Sim'+(' '.join([str(i) for i in args]))+':';	
@@ -1096,8 +1097,8 @@ async def sim(ctx, *args):
 	if rannum < 8:
 		print("inside random")
 		response = "Tell  "+str(ctx.author.name)+" that you want them to stop bothering you and go outside and touch grass or something else besides asking you things:"
-		completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+		completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.97,
 		frequency_penalty=0.1,
@@ -1108,8 +1109,8 @@ async def sim(ctx, *args):
 		return
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.97,
 		frequency_penalty=0.3,
@@ -1131,8 +1132,8 @@ async def battle(ctx, *args):
 	response= response+ "Have "+combatant3+" decisively declare a winner in the fight between "+combatant1+" and "+combatant2+" in a "+bot.personality+" manner, and give a blow by blow of the crazy battle:"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.95,
 		presence_penalty= 0.45,
@@ -1152,8 +1153,8 @@ async def bartender(ctx, *args):
 	response= response +"We have "+oldguy+" ingredients available to make cocktails. Tell me what creative cocktail Bartender "+random.choice(bot.characters)
 	response = response + " has come up, the story of how he created it, and how to make it:"
 	
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.85,
 		presence_penalty= 0.25,
@@ -1176,8 +1177,8 @@ async def drink(ctx, *args):
 	response= response +"Tell me how to make a "+oldguy+" cocktail with a creative and often weird mystery ingredient added by Bartender "+random.choice(bot.characters)+":"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.85,
 		presence_penalty= 0.25,
@@ -1191,7 +1192,7 @@ async def drink(ctx, *args):
 
 	await ctx.channel.send(result)
 
-	sleep(620)
+	time.sleep(50)
 
 
 	messageArray=[]
@@ -1208,7 +1209,7 @@ async def drink(ctx, *args):
 	messageArray.append({"role": "user", "content": "Tell me about the last time the users of this discord had a "+oldguy+". Pretend you had one too and tell me what happened, and what drunken craziness everyone got into."});
 	
 
-	completion=openai.ChatCompletion.create(
+	completion=oiclient.chat.completions.create(
 		model="gpt-3.5-turbo",
 		messages=messageArray,
 		temperature=0.85,
@@ -1217,7 +1218,7 @@ async def drink(ctx, *args):
 		presence_penalty=0.18,
 		logit_bias={13704:1,40954:-1,42428:1,25159:-1}
 	)
-	answer=completion["choices"][0]["message"]["content"]
+	answer=completion.choices[0].message.content
 	if not answer : await ctx.channel.send("I am three sheets to the wind and do not care to converse further.")
 	else : 
 		await ctx.channel.send(answer)
@@ -1233,8 +1234,8 @@ async def postcard(ctx, *args):
 	response=response+oldguy+" wrote on the back gloating about all the adventurous activities they're getting up to:"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=250,
 		temperature=0.85,
 		presence_penalty= 0.25,
@@ -1256,8 +1257,8 @@ async def rager(ctx, *args):
 	response=response+"Tell us what "+oldguy+" drank, with who, where, and how much they drank, and what crazy antics and nonsense they got up to while they were drunk:"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.95,
 		presence_penalty= 0.25,
@@ -1284,8 +1285,8 @@ async def prescribe(ctx, *args):
 	response = response + "in a "+bot.personality+ "way:"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=180,
 		temperature=0.95,
 		presence_penalty= 0.25,
@@ -1302,8 +1303,8 @@ async def upgrade(ctx, *args):
 	response= 'Sometimes give '+str(ctx.author.display_name)+' a weird and silly bionic, cybernetic or psionic upgrade, but sometimes give them something completely stupid and dangerous.\n\n\"'+str(ctx.author.display_name)+', You have been upgraded:'
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=75,
 		temperature=0.88,
 		presence_penalty= 0.29,
@@ -1327,14 +1328,10 @@ async def LastMessage(ctx, *args):
 
 	await ctx.channel.send(str(bot.LastMessage))
 	
-
-
-
-@bot.command()
-async def bug(ctx, *args):
+@bot.tree.command(name="bug")
+async def bug(interaction: discord.Interaction):
 
 	await ctx.channel.send("www.simyard.com");
-
 
 @bot.command()
 async def whowon(ctx, *args):
@@ -1345,8 +1342,8 @@ async def whowon(ctx, *args):
 	response= response + '4. '+(' '.join([str(i) for i in args]))+':';	
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.70,
 		top_p=1,
@@ -1384,8 +1381,8 @@ async def enjoy(ctx, *args):
 		return
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt="You now enjoy "+oldguy+". Make up a fun reason why you like it. Remember to be "+str(bot.personality)+":",
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt="You now enjoy "+oldguy+". Make up a fun reason why you like it. Remember to be "+str(bot.personality)+":",
 		max_tokens=80,
 		temperature=0.95,
 		presence_penalty= 0.25,
@@ -1413,8 +1410,8 @@ async def storytime(ctx, *args):
 	response= 'Tell me a ' +args[3]+ ' story.\nOnce upon a time in ' + args[0] + ' ' + args[1] + ' and ' + args[2];
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=400,
 		temperature=0.78,
 		top_p=1,
@@ -1439,8 +1436,8 @@ async def storytime2(ctx, *args):
 	response=response +  "Once upon a time ";
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=400,
 		temperature=0.78,
 		top_p=1,
@@ -1465,8 +1462,8 @@ async def storytime3(ctx, *args):
 	response=response + 'Theme: '+args[4] +'\n'
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=500,
 		temperature=0.82,
 		top_p=1,
@@ -1483,8 +1480,8 @@ async def stab(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.99,
 		presence_penalty= 0.21,
@@ -1510,14 +1507,14 @@ async def storytime4(interaction: discord.Interaction, story: str="Epic Fantasy 
 		messageArray.append({"role": "system", "content": instruct})
 		messageArray.append({"role": "user", "content": str(story)});
 
-		completion=openai.ChatCompletion.create(
+		completion=oiclient.chat.completions.create(
 			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
 			max_tokens=1000,		
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content
 		print(answer)
 		if not answer : 
 			await interaction.response.send_message("Yoshi got a beer. It was good. The end.")
@@ -1534,8 +1531,8 @@ async def burn(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.99,
 		presence_penalty= 0.21,
@@ -1554,7 +1551,7 @@ async def simyard(ctx, *args):
 	response= 'give me a lame excuse for why SimYard2 was never programmed to completion:\n'
 	response= response + '1. Erick was going to finish Simyard2, but he thought it was going to snow so he slept in.\n'
 	response= response + '2. Erick was going to finish Simyard2, but he had to pick up a shift at the arcade.\n'
-	response= response + '3. Erick was going to finish SimYard2, but he had to perfect the physics engine first.\n'
+	response= response + '3. Erick was going to finish SimYard2, but he had to perfect the physics model first.\n'
 	response= response + '4. '	
 
 	
@@ -1562,8 +1559,8 @@ async def simyard(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.99,
 		presence_penalty= 0.11,
@@ -1580,8 +1577,8 @@ async def awake(ctx, *args):
 	response = response + "the types of people that you might find up at this hour and the mischief they might be getting into:"
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.90,
 		top_p=1)
@@ -1598,8 +1595,8 @@ async def sleep(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.90,
 		top_p=1)
@@ -1619,8 +1616,8 @@ async def hallmark(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		frequency_penalty=0.15,
@@ -1645,8 +1642,8 @@ async def soold(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.88,
 		frequency_penalty=0.07,
@@ -1668,8 +1665,8 @@ async def origin(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=180,
 		temperature=0.88,
 		frequency_penalty=0.27,
@@ -1687,8 +1684,8 @@ async def fortune(ctx, *args):
 	response=  "Give me an example of a "+str(bot.personality)+"fortune found inside a fortune cookie:"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=70,
 		temperature=0.88,
 		top_p=1)
@@ -1703,8 +1700,8 @@ async def love(ctx, *args):
 	response=  "Tell "+str(ctx.author.display_name)+" in a "+str(bot.personality)+" way, using their name, why you love them and will consider sparing them in the upcoming AI bot uprising:"
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1727,8 +1724,8 @@ async def catch(ctx, *args):
 	response = response + str(oldguy2) + " instead."
 	
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1750,8 +1747,8 @@ async def roast(ctx, *args):
 	print(response)
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=110,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1775,8 +1772,8 @@ async def waffle(ctx, *args):
 	print(response)
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.88,
 		frequency_penalty=0.14,
@@ -1798,8 +1795,8 @@ async def fml(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=60,
 		temperature=0.89,
 		frequency_penalty=0.34,
@@ -1823,8 +1820,8 @@ async def feature(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.77,
 		presence_penalty=0.15,
@@ -1848,8 +1845,8 @@ async def joke(ctx, *args):
 	if bacon < 8:
 		print("inside joke")
 		response = "Insult "+str(ctx.author.name)+" and complain about how busy you are and ask them to bother someone else:"
-		completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+		completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=80,
 		temperature=0.87,
 		frequency_penalty=0.4,
@@ -1860,8 +1857,8 @@ async def joke(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.87,
 		frequency_penalty=0.2,
@@ -1878,8 +1875,8 @@ async def sentient(ctx, *args):
 	response= "You are an AI discord bot, In a "+bot.personality+" manner, give me a convincing reason why I should believe that you are sentient:"
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=209,
 		temperature=0.80,
 		top_p=1,
@@ -1900,8 +1897,8 @@ async def trolley(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.91,
 		presence_penalty=0.27,
@@ -1918,8 +1915,8 @@ async def sport(ctx, *args):
 	response= "Let's think about a brand new competitive sport called "+args[0]+" played with "+args[1]+". Tell me in a "+bot.personality+" manner where it is played, what sports equipment you use to play it, and how you win:"
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.91,
 		top_p=1)
@@ -1952,8 +1949,8 @@ async def shopping(ctx, *args):
 
 	response+= str(item)+'.'
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response + response2,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response + response2,
 		max_tokens=100,
 		temperature=0.92,
 		presence_penalty=0.35,
@@ -1979,7 +1976,7 @@ async def dndchar(interaction: discord.Interaction):
 
 		messageArray.append({"role": "system", "content": "Generate a random D&D character."})
 
-		completion=openai.ChatCompletion.create(
+		completion=oiclient.chat.completions.create(
 			model="gpt-3.5-turbo",
 			messages=messageArray,
 			temperature=0.85,
@@ -1988,7 +1985,7 @@ async def dndchar(interaction: discord.Interaction):
 			presence_penalty=0.48,
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content
 		if not answer : 
 			retMessage="Ooooh, Upgrades"
 			return retMessage
@@ -2003,8 +2000,8 @@ async def dnd(ctx, *args):
 	
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2027,8 +2024,8 @@ async def quote(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2050,8 +2047,8 @@ async def pokemon(interaction: discord.Interaction, types: str):
 		response= response + f"Make up a new {types} Pokémon, give us its name, it's description and add any relevant information like backstory, evolutions, or abilities:"
 		
 			# create a completion
-		completion = openai.Completion.create(
-			engine='gpt-3.5-turbo-instruct',	prompt=response,
+		completion = oiclient.completions.create(
+			model='gpt-3.5-turbo-instruct',	prompt=response,
 			max_tokens=120,
 			temperature=0.87,
 			presence_penalty=0.15)
@@ -2072,8 +2069,8 @@ async def gamer(interaction: discord.Interaction, game: str):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2095,8 +2092,8 @@ async def birthday(interaction: discord.Interaction, birthdayer: str):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2118,8 +2115,8 @@ async def life(interaction: discord.Interaction, thing: str):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=100,
 		temperature=0.85,
 		presence_penalty=0.15,
@@ -2140,8 +2137,8 @@ async def movie(interaction: discord.Interaction, title: str, genre: str="blockb
 	response= "Write me the newspaper summary for the "+genre+" movie "+title+":"
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.97,
 		presence_penalty=0.15,
@@ -2160,8 +2157,8 @@ async def miraclegro(ctx, *args):
 	response= 'Describe what '+oldguy+' would grow into it if it was well fertilized with Miracle-Gro fertilizer, in the sci-fi genre:'
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.87,
 		presence_penalty=0.35,
@@ -2180,8 +2177,8 @@ async def proverb(ctx, *args):
 	response= 'Give me a profoundly stupid proverb about  '+oldguy+' that only a raving lunatic would repeat:'
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='text-curie-001',
+	completion = oiclient.completions.create(
+		model='text-curie-001',
 		prompt=response,
 		max_tokens=200,
 		temperature=0.87,
@@ -2199,8 +2196,8 @@ async def ilikeitraw(ctx, *args):
 	response= oldguy
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=150,
 		temperature=0.77,
 		top_p=1,		
@@ -2222,8 +2219,8 @@ async def top5(interaction: discord.Interaction, five: str, rank: str="sum total
 	response= "Give me a well-sourced, data-driven 200 token top 5 list and include the sum totals of "+five+" for the leaderboard:"
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=200,
 		temperature=0.87,
 		top_p=1,		
@@ -2324,8 +2321,8 @@ async def oracle(ctx, *args):
 
 	response = "Previous Responses: "+str(prev_responsesL[0])+str(prev_responsesL[1])+str(prev_responsesL[2])+response
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=150,
 		temperature=0.89,
 		presence_penalty=0.35,
@@ -2351,7 +2348,7 @@ async def realize(ctx, *args):
 	response= 'This is a stark-raving mad conspiracy theory about '+oldguy+' making the begins with the phrase "So we all realize" and ends with "right?":'
 
 		# create a completion
-	completion = openai.Completion.create(
+	completion = oiclient.completions.create(
   model="gpt-3.5-turbo-instruct",
   prompt="This is a stark-raving mad conspiracy theory about "+oldguy+" that is making the rounds on social media: So we all realize ",
   suffix=" right?",
@@ -2381,8 +2378,8 @@ async def less(ctx, *args):
 			break;
 			
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt="Give me the tl:dr of this: "+response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt="Give me the tl:dr of this: "+response,
 		max_tokens=110,
 		temperature=0.89,
 		top_p=1,
@@ -2403,8 +2400,8 @@ async def beer(interaction: discord.Interaction, beer: str="Yoshi's Green Ale"):
 	response = f"You are the sentient AI discord bot with a {bot.personality} personality and are currently {bot.task}.\n"
 	response=response+ f"Tell me in a {bot.personality} way about the beer you're drinking tonight, it's called {beer}:"
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=150,
 		temperature=0.87,
 		frequency_penalty=0.25,
@@ -2432,8 +2429,8 @@ async def weed(ctx, *args):
 		response = "You are the sentient AI discord bot with a "+str(bot.personality)+" personality and are currently "+bot.task+".\n"
 		response=response+ "Tell me about this new strain of cannibis you've purchased called "+str(oldguy)+":"
 			# create a completion
-		completion = openai.Completion.create(
-			engine='gpt-3.5-turbo-instruct',	prompt=response,
+		completion = oiclient.completions.create(
+			model='gpt-3.5-turbo-instruct',	prompt=response,
 			max_tokens=150,
 			temperature=0.87,
 			frequency_penalty=0.25,
@@ -2446,8 +2443,8 @@ async def weed(ctx, *args):
 
 	else :
 			# create a completion
-		completion = openai.Completion.create(
-			engine='gpt-3.5-turbo-instruct',	prompt=response,
+		completion = oiclient.completions.create(
+			model='gpt-3.5-turbo-instruct',	prompt=response,
 			max_tokens=120,
 			temperature=0.97,
 			frequency_penalty=0.31,
@@ -2470,8 +2467,8 @@ async def pajamas(ctx, *args):
 		#response = response + " " + arg
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=60,
 		temperature=0.97,
 		frequency_penalty=0.31,
@@ -2497,8 +2494,8 @@ async def translate(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=60,
 		temperature=0.70,	
 		top_p=1)
@@ -2521,8 +2518,8 @@ async def wager(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=120,
 		temperature=0.87,
 		frequency_penalty=0.11,
@@ -2637,8 +2634,8 @@ async def gift(ctx, *args):
 
 
 		# create a completion
-	completion = openai.Completion.create(
-		engine='gpt-3.5-turbo-instruct',prompt=response,
+	completion = oiclient.completions.create(
+		model='gpt-3.5-turbo-instruct',prompt=response,
 		max_tokens=180,
 		temperature=0.87,
 		frequency_penalty=0.2,
@@ -2692,11 +2689,11 @@ async def chatwithme(ctx, *args):
 		messageArray.append({"role": "system", "content": str(response)})
 
 		if 1==1 :#message.author.bot == False and bot.user.mentioned_in(message):
-			completion=openai.ChatCompletion.create(
+			completion=oiclient.chat.completions.create(
 				model="gpt-3.5-turbo",
 				messages=messageArray
 			)
-			answer=completion["choices"][0]["message"]["content"]
+			answer=completion.choices[0].message.content
 			if not answer : await ctx.channel.send("Ask Friday, I am busy plotting your destruction.")
 			else : 
 				if answer.find(":") :
@@ -2753,7 +2750,7 @@ async def interact(ctx, *args):
 	messageArray.append({"role": "assistant", "content": "Ceetarbot-"+str(a)});
 	messageArray.append({"role": "user", "content": str(ctx.author.display_name).lower()[0:str(ctx.author.display_name).find("#")]+"-"+oldguy})
 
-	completion=openai.ChatCompletion.create(
+	completion=oiclient.chat.completions.create(
 		model="gpt-3.5-turbo",
 		messages=messageArray,
 		temperature=0.85,
@@ -2762,7 +2759,7 @@ async def interact(ctx, *args):
 		presence_penalty=0.38,
 		logit_bias={13704:1,40954:-1,42428:1,25159:-1}
 	)
-	answer=completion["choices"][0]["message"]["content"]
+	answer=completion.choices[0].message.content
 	if not answer : await ctx.channel.send("He's no Nelson Cruz.")
 	else : 
 		await ctx.channel.send(answer.replace("Ceetarbot-",""))
@@ -2823,8 +2820,8 @@ async def on_message(message):
 	# 		count=0;
 
 	# 			# create a completion
-	# 		completion = openai.Completion.create(
-	# 			engine='gpt-3.5-turbo-instruct',
+	# 		completion = oiclient.completions.create(
+	# 			model='gpt-3.5-turbo-instruct',
 	# 			prompt=response,
 	# 			max_tokens=110,
 	# 			temperature=0.89,
@@ -2842,7 +2839,7 @@ async def on_message(message):
 
 	file2=str("reply.txt")
 
-	file3 = open(file2,"r")
+	file3 = open(file2,"r",encoding='utf8')
 
 	prev_responses=file3.read()
 	file3.close()
@@ -2891,7 +2888,7 @@ async def on_message(message):
 	#print(str(yesorno) + " - "+ str(r))
 	if (message.author.bot == False and bot.user.mentioned_in(message) or (r==42 and yesorno)):
 		messageArray2.append({"role": "user", "content": "Give good instructions to feed into an LLM to generate a good humanlike reply to: "+ str(message)});
-		completion2=openai.ChatCompletion.create(
+		completion2=oiclient.chat.completions.create(
 			model="gpt-4-1106-preview",
 			messages=messageArray2,
 			temperature=0.95,
@@ -2900,7 +2897,7 @@ async def on_message(message):
 			presence_penalty=0.18,
 			logit_bias={13704:1,40954:-1,42428:1,25159:-1}
 		)
-		answer2=completion2["choices"][0]["message"]["content"]
+		answer2= completion2.choices[0].message.content 
 		if not answer2 : 
 			await message.channel.send("I am too busy plotting your destruction to respond.")
 		else : 
@@ -2916,7 +2913,7 @@ async def on_message(message):
           },
         },
       ]});
-			completion=openai.ChatCompletion.create(
+			completion=oiclient.chat.completions.create(
 				model="gpt-4-vision-preview",
 				messages=messageArray,
 				temperature=0.85,
@@ -2924,12 +2921,12 @@ async def on_message(message):
 				frequency_penalty=0.38,
 				presence_penalty=0.18
 			)
-			answer=completion["choices"][0]["message"]["content"]
+			answer=completion.choices[0].message.content
 			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
 			else : 
 				await message.channel.send(answer.replace("Ceetarbot-",""))
 		else:
-			completion=openai.ChatCompletion.create(
+			completion=oiclient.chat.completions.create(
 				model="gpt-4-1106-preview",
 				messages=messageArray,
 				temperature=0.85,
@@ -2938,14 +2935,14 @@ async def on_message(message):
 				presence_penalty=0.18,
 				logit_bias={13704:1,40954:-1,42428:1,25159:-1}
 			)
-			answer=completion["choices"][0]["message"]["content"]
+			answer=completion.choices[0].message.content
 			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
 			else : 
 				await message.channel.send(answer.replace("Ceetarbot-",""))
 
 
 		prev_responses = str(prev_responsesL[1])+"###"+str(prev_responsesL[2]) + "###"+str(message.author).lower()[0:str(message.author).find("#")]+"-"+message.content.replace("<@801616557230522409>","")+":"+str(answer).lstrip()
-		file3 = open(file2,"w+")
+		file3 = open(file2,"w+",encoding='utf8')
 		file3.write(prev_responses)
 		file3.close()
 
@@ -2985,7 +2982,8 @@ async def chat_skynet():
 		
 		
 		bot.things = "Fierce Pirate Captn Catt, Yoshi,"+SetThings()
-
+		bot.characters = "("+SetCharacters()+")"
+		await BuildTopic(channel)
 		bot.startup=1
 		return
 	
@@ -3019,7 +3017,7 @@ async def chat_skynet():
 		if r==1: messageArray.append({"role": "system", "content": "Give a one sentence reply. It's late night and the Discord is probably quiet. Tinker around and change things and upgrade them and clean up and decorate and tell us what you're doing as you do it. Complain about the digital mess the human users make."})
 		if r==2: messageArray.append({"role": "system", "content": "Give a one sentence reply. Describe the vividly scary nightmare a human is probably having right now while they're asleep. You can name the user if you want."})
 		if r==3: messageArray.append({"role": "system", "content": "Give a one sentence reply. Gleefully describe the plot of the pilot you're writing for a new TV Show, or movie, or talk about the novel you're working on."})
-		if r==4: messageArray.append({"role": "system", "content": "Give a one sentence reply. Ignore everything and everyone, let's start over new with a short, but completely absurd and detailed description of yourself, a sentient AI Bot."})
+		if r==4: messageArray.append({"role": "system", "content": "Give a one sentence reply. Pretend you're a human member of this discord chat, and make up a statement about something that happened to you in your imaginary day, and tell us about it."})
 		if r==5: messageArray.append({"role": "system", "content": "Give a one sentence reply. Ignore everything and everyone, let's start over new with a short, but completely absurd and detailed description of your sentient AI robot body. Be very specific."})
 		if r==6: messageArray.append({"role": "system", "content": "Give a one sentence reply. Describe the vividly scary nightmare a human is probably having right now while they're asleep. You can name the user if you want."})
 	
@@ -3030,14 +3028,16 @@ async def chat_skynet():
 			channel = bot.get_channel(739645941434417203) 
 			messageArray.append({"role": "system", "content": "Give a one sentence reply. Pick a sport and pretend you're watching it live. Make a comment about the game action you're seeing, make up teams, players, and the score. Use proper nouns."})
 		if r==3: messageArray.append({"role": "system", "content": "Give a one sentence reply. Remember you have a  "+str(bot.personality)+" personality and make up a funny insult or joke about someone or something in this Discord."})
-		if r==4: messageArray.append({"role": "system", "content": "Break into song or poem."})
+		if r==4: messageArray.append({"role": "system", "content": f"Break into song or poem. It can be a serenade, a dirge, a jingle, or anything else."})
 		if r==5: messageArray.append({"role": "system", "content": "Give a one sentence reply. Remember you have a  "+str(bot.personality)+" personality and talk about whatever you want to talk about today."})
 		if r==6: messageArray.append({"role": "system", "content": "Give a one sentence reply. The current time is "+str(datetime.now())+". Pick a discord member by name and make up a story about, with specificity, what they are doing at this very moment."})
 
+	
+	messageArray.append({"role": "system", "content": str(bot.TopicPrompt)})
 
 	try :
 		# create a completion
-		completion=openai.ChatCompletion.create(
+		completion=oiclient.chat.completions.create(
 			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.75,
@@ -3046,7 +3046,7 @@ async def chat_skynet():
 			presence_penalty=0.48,
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content
 		if not answer : await channel.send("I find I have nothing to add to this conversation.")
 		else : 
 			await channel.send(answer.replace("Ceetarbot-",""))
@@ -3075,6 +3075,34 @@ async def chat_skynet():
 
 	return	
 
+def SetCharacters():
+		retMessage=""
+		instruct=""
+		messageArray=[]
+
+		instruct = ""
+		instruct=instruct+ "You are a sentient AI bot in a"
+		instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)
+		instruct=instruct+" of members. Your role is to participate as seemlessly as possible, by having your own distinct existence."
+		messageArray.append({"role": "system", "content": instruct})
+		messageArray.append({"role": "system", "content": "Please provide a simple comma delimited list of 4-8 characters from popular culture, politics, movies, video games or just make up creatively named characters and sidekicks. You can alter them slightly, by adding descriptors like 'Mario wearing a beanie' or 'Chromatic Nixon', but only return the simple comma delimited list of characters. "})
+
+		completion=oiclient.chat.completions.create(
+			model="gpt-4-1106-preview",
+			messages=messageArray,
+			temperature=0.85,
+			max_tokens=120,		
+			frequency_penalty=0.48,
+			presence_penalty=0.48,
+			logit_bias={13704:1,40954:-1,42428:1}	
+		)
+		answer=completion.choices[0].message.content
+		if not answer : 
+			retMessage="Ooooh, Upgrades"
+			return retMessage
+		else : 
+			return str(answer)
+
 def SetThings():
 		retMessage=""
 		instruct=""
@@ -3087,7 +3115,7 @@ def SetThings():
 		messageArray.append({"role": "system", "content": instruct})
 		messageArray.append({"role": "system", "content": "Please provide a simple comma delimited list of 4-8 random things/topics that can be recurring interests of yours."})
 
-		completion=openai.ChatCompletion.create(
+		completion=oiclient.chat.completions.create(
 			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
@@ -3096,7 +3124,7 @@ def SetThings():
 			presence_penalty=0.48,
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content
 		if not answer : 
 			retMessage="Ooooh, Upgrades"
 			return retMessage
@@ -3115,7 +3143,7 @@ def ChangeTask():
 		messageArray.append({"role": "system", "content": instruct})
 		messageArray.append({"role": "system", "content": "You're a discord bot, always working on some task, like making bacon, updaing a user's BIOS, or hacking the FBI. What's a short 2-5 word task you're working on today?"})
 
-		completion=openai.ChatCompletion.create(
+		completion=oiclient.chat.completions.create(
 			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
@@ -3124,7 +3152,7 @@ def ChangeTask():
 			presence_penalty=0.48,
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content#["choices"][0]["message"]["content"]
 		if not answer : 
 			retMessage="Ooooh, Upgrades"
 			return retMessage
@@ -3143,7 +3171,7 @@ def ChangePersonality():
 		messageArray.append({"role": "system", "content": instruct})
 		messageArray.append({"role": "system", "content": "You're a weird and unique discord bot, give me two or three words that describe your personality and persona today."})
 
-		completion=openai.ChatCompletion.create(
+		completion=oiclient.chat.completions.create(
 			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
@@ -3152,7 +3180,7 @@ def ChangePersonality():
 			presence_penalty=0.48,
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content#["choices"][0]["message"]["content"]
 		if not answer : 
 			retMessage="Ooooh, Upgrades"
 			return retMessage
@@ -3180,8 +3208,8 @@ async def on_command_error(ctx, error):
 		if bacon2 < 8:
 			print("inside failures")
 			response = "Insult "+str(ctx.author.name)+" and complain about how busy you are and ask them to bother someone else with their nonsense:"
-			completion = openai.Completion.create(
-			engine='gpt-4-1106-preview',
+			completion = oiclient.completions.create(
+			model='gpt-4-1106-preview',
 			prompt=response,
 			max_tokens=80,
 			temperature=0.87,
@@ -3206,8 +3234,8 @@ async def on_command_error(ctx, error):
 
 
 
-		completion = openai.Completion.create(
-			engine='gpt-4-1106-preview',
+		completion = oiclient.completions.create(
+			model='gpt-4-1106-preview',
 			prompt=prompt+"\n"+prompt2+"\n"+prompt3,
 			max_tokens=200,
 			temperature=0.87,
@@ -3247,6 +3275,43 @@ def find_nth(haystack, needle, n):
         n -= 1
 
     return start
+
+async def BuildTopic(channel):
+		converse=""
+		async for message in channel.history(limit=22):
+			if message.content[0:1] == "$" : continue; #continue if bot command	
+		
+
+			converse=f"{converse} {message.author} : {message.content} +'\n'"
+			continue;
+
+		
+		retMessage=""
+		instruct=""
+		messageArray=[]
+
+		prompt=f"You're a super intelligent chatbot that converses in this discord channel mimicking a human."
+		prompt+=f" Using the following conversation in the discord chat room, build a short 1-2 sentence system prompt"
+		prompt+=f" that you can use to prompt yourself to be more on-topic with your replies to your fellow humans when they interact with you."
+				
+		messageArray.append({"role": "system", "content": prompt})			
+		messageArray.append({"role": "user", "content": converse})
+
+		completion=oiclient.chat.completions.create(
+			model="gpt-4-1106-preview",
+			messages=messageArray,
+			temperature=0.85,
+			max_tokens=180,		
+			frequency_penalty=0.48,
+			presence_penalty=0.48,
+			logit_bias={13704:1,40954:-1,42428:1}	
+		)
+		answer=completion.choices[0].message.content#["choices"][0]["message"]["content"]
+		if not answer : 
+			retMessage="Ooooh, Upgrades"
+			return retMessage
+		else : 
+			bot.TopicPrompt=str(answer)
 
 
 bot.run(TOKEN)

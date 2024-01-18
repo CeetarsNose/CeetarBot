@@ -1,7 +1,10 @@
 import openai
 from nltk.tokenize import word_tokenize
 import nltk
+
 nltk.download('punkt')
+
+
 
 def isQuestion(q):
 	print(q)
@@ -20,7 +23,7 @@ def isQuestion(q):
 	else:
 		return False
 
-def ChangeTask(botMember):
+# def ChangeTask(botMember):
 		retMessage=""
 		instruct=""
 		messageArray=[]
@@ -32,8 +35,8 @@ def ChangeTask(botMember):
 		messageArray.append({"role": "system", "content": instruct})
 		messageArray.append({"role": "system", "content": "You're a discord bot, always working on some task, like making bacon, updaing a user's BIOS, or hacking the FBI. What's a short 2-5 word task you're working on today?"})
 
-		completion=openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
+		completion=oiclient.chat.completions.create(
+			model="gpt-4-1106-preview",
 			messages=messageArray,
 			temperature=0.85,
 			max_tokens=120,		
@@ -41,7 +44,7 @@ def ChangeTask(botMember):
 			presence_penalty=0.48,
 			logit_bias={13704:1,40954:-1,42428:1}	
 		)
-		answer=completion["choices"][0]["message"]["content"]
+		answer=completion.choices[0].message.content
 		if not answer : 
 			retMessage="Ooooh, Upgrades"
 			return retMessage

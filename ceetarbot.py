@@ -3209,7 +3209,7 @@ async def on_command_error(ctx, error):
 			print("inside failures")
 			response = "Insult "+str(ctx.author.name)+" and complain about how busy you are and ask them to bother someone else with their nonsense:"
 			completion = oiclient.completions.create(
-			model='gpt-4-1106-preview',
+			model='gpt-3.5-turbo-instruct',
 			prompt=response,
 			max_tokens=80,
 			temperature=0.87,

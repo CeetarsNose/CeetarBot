@@ -2178,7 +2178,7 @@ async def proverb(ctx, *args):
 
 		# create a completion
 	completion = oiclient.completions.create(
-		model='text-curie-001',
+		model='gpt-3.5-turbo-instruct',
 		prompt=response,
 		max_tokens=200,
 		temperature=0.87,

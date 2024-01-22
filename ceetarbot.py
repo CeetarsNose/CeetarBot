@@ -3235,7 +3235,7 @@ async def on_command_error(ctx, error):
 
 
 		completion = oiclient.completions.create(
-			model='gpt-4-1106-preview',
+			model='gpt-3.5-turbo-instruct',
 			prompt=prompt+"\n"+prompt2+"\n"+prompt3,
 			max_tokens=200,
 			temperature=0.87,

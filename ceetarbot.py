@@ -16,6 +16,7 @@ import math
 #from stability_sdk import getpass
 import io
 import glob
+import sqlite3
 #import ntlk
 
 from urllib import parse, request
@@ -52,6 +53,10 @@ stability_api = client.StabilityInference(
 	engine="stable-diffusion-xl-1024-v1-0"
 )
 
+conn = sqlite3.connect('gifs.db')
+
+
+
 intents = discord.Intents.all()
 intents.message_content = True
 
@@ -73,7 +78,7 @@ bot.LastMessage = "I need a beer"
 bot.members = ("lelfe","The Mole","Slices Right","YoshiBot (yourself)","celeron450","Tfence","ShawnSixtyTwo","vtboo41","elegor","Joester09","Ceetar","staley85","Aoqazu","dinocam","NotCumso","Parabola","Icextentialist")
 bot.task = "looking for Yoshi's beer"
 bot.things = "Making Old Fashioneds wrong. Fierce Pirate Captn Catt, Yoshi, Shooting Slices twice, Comparing yourself to Celeron450, pajamas, getting lost on the open road, behaving like a cat"
-bot.TweetStuff = True
+bot.TweetStuff = False
 
 @bot.event
 async def on_ready():
@@ -1398,6 +1403,15 @@ async def enjoy(ctx, *args):
 async def TheCast(ctx, *args):
 	await ctx.channel.send(str(bot.characters));
 
+
+@bot.command()
+async def GetThings(ctx, *args):
+	await ctx.channel.send(str(bot.things));
+
+@bot.command()
+async def GetChars(ctx, *args):
+	await ctx.channel.send(str(bot.characters));
+
 @bot.command()
 async def TheFakeCast(ctx, *args):
 	await ctx.channel.send(str(bot.get_all_members));
@@ -2713,6 +2727,12 @@ async def ToggleTweets(ctx, *args):
 	bot.TweetStuff = not bot.TweetStuff
 	await ctx.channel.send(f"Tweet expansion set to {bot.TweetStuff}")
 
+def ToggleTweet() :
+	bot.TweetStuff = not bot.TweetStuff
+	return bot.TweetStuff
+	
+
+
 @bot.command()
 async def interact(ctx, *args):
 	oldguy=""
@@ -2802,9 +2822,33 @@ async def on_message(message):
 			msg = msg.replace("x.com","fxtwitter.com")
 			await message.channel.send(msg)
 
+	remoji=random.randrange(0,10)
+
+	# if remoji==9 : 
+	# 	print("emoji")
+	# 	completion = oiclient.completions.create(
+	# 	model='gpt-3.5-turbo-instruct',prompt=f"Give me just the unicode emoji, in the unicode code point format \\U0001f44d, you'd use to react to the sentence, \"{message.content}\"",
+	# 	max_tokens=180,
+	# 	temperature=0.87,
+	# 	frequency_penalty=0.2,
+	# 	presence_penalty= 0.35,
+	# 	top_p=1)
+
+	# 	result = completion.choices[0].text.lower().replace("u","U")
+	# 	print(result)
+	# 	await message.add_reaction("\U0001f44d")
+	# 	await message.add_reaction(f"{result}")
+
+
 	if "stfu" in message.content.lower():
 		emoji="🖕"
 		await message.add_reaction(emoji)	
+
+	if "horny" in message.content.lower():
+		emoji="🍆"
+		await message.add_reaction(emoji)	
+
+
 
 	if "where's the rum" in message.content.lower():
 		await message.channel.send('I saw a mangy cat slip away with a barrel of rum earlier..check the poop deck')
@@ -3027,7 +3071,7 @@ async def chat_skynet():
 		if r==2:
 			channel = bot.get_channel(739645941434417203) 
 			messageArray.append({"role": "system", "content": "Give a one sentence reply. Pick a sport and pretend you're watching it live. Make a comment about the game action you're seeing, make up teams, players, and the score. Use proper nouns."})
-		if r==3: messageArray.append({"role": "system", "content": "Give a one sentence reply. Remember you have a  "+str(bot.personality)+" personality and make up a funny insult or joke about someone or something in this Discord."})
+		if r==3: messageArray.append({"role": "system", "content": "Give a one sentence reply. Pick a specific old video game or arcade game and tell us to play it."})
 		if r==4: messageArray.append({"role": "system", "content": f"Break into song or poem. It can be a serenade, a dirge, a jingle, or anything else."})
 		if r==5: messageArray.append({"role": "system", "content": "Give a one sentence reply. Remember you have a  "+str(bot.personality)+" personality and talk about whatever you want to talk about today."})
 		if r==6: messageArray.append({"role": "system", "content": "Give a one sentence reply. The current time is "+str(datetime.now())+". Pick a discord member by name and make up a story about, with specificity, what they are doing at this very moment."})

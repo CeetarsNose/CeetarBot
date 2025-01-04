@@ -537,15 +537,166 @@ async def imaged(ctx, *args):
 	images = pipe(prompt=prompt).images[0]	
 
 @bot.command()
-async def image2(ctx, *args):
+async def image(ctx, *args):
+	r2=random.randrange(0,11)
+	r3=random.randrange(0,7)
+	moretime=50
+	cfg=8.0
+	thecat=0
+	noinit=0
+	oldguy="Yoshi from Mario Kart eating an avocado in the Oval Office"
+	oldoldguy=""
+	#args= args + ('stand-up','airplanes',)
+	if args : oldguy=(" ".join([str(i) for i in args]));
 
+	oldguy = str(oldguy) #+ str(moretime)
+	if "|" in oldguy :
+		notoldguy=str(oldguy.split("|")[1])
+		oldguy=str(oldguy.split("|")[0])
+	else :
+		notoldguy="out of focus"
+
+	oldoldguy = oldguy
+
+	#oldguy=oldguy.replace("'","")
+	if "captn catt" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="fierce pirate cat wearing the hat of a pirate captain, cat wearing a hat, feline ship captain, Captain's Hat"
+		notoldguy="out of focus,cut off, out of frame, deformed, fuzzy"
+
+		cfg=12.0
+	#if "captn catt" in oldguy.lower() :
+		#oldguy=oldguy.replace("captn catt","cat wearing the hat of a fierce pirate boat captain, feline ship captain ") +", Captain's Hat, 4k, hd, full shot, Captain Cat, Captn Catt"		
+
+	if "Ceetarbot" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a super-advanced AI robot designed for world domination, 4k, hd"
+		cfg=12.0
+	if "ceetarbot" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a 31st century android AI robot with smooth human-like skin, 4k, hd"
+		cfg=12.0
+	if "ceetar bot" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a 31st century android AI robot with smooth human-like skin, 4k, hd"
+		cfg=12.0
+	if "cee tar bot" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a 31st century android AI robot with smooth human-like skin, 4k, hd"
+		cfg=12.0
+	if "cee tarbot" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a 31st century android AI robot with smooth human-like skin, 4k, hd"
+		cfg=12.0
+
+	if "ceetar" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="an attractive italian-American man wearing a video game shirt, finely detailed, short black hair, drinking a frothy brown beer, 4k, hd"
+		cfg=12.0
+	if "ceetar" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="an attractive italian-American man wearing a video game shirt, finely detailed, short black hair, drinking a frothy brown beer, 4k, hd"
+		cfg=12.0
+	if "cee tar" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="an attractive italian-American man wearing a video game shirt, finely detailed, short black hair, drinking a frothy brown beer, 4k, hd"
+		cfg=12.0
+
+
+	if "slices" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a decrepit medium-sized old man, with scraggly white hair and drooping face"
+		cfg=11.0
+		notoldguy=notoldguy+", beard"
+
+	if "gimblor" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a stoned Canadian man smoking weed and cosplaying LoTR"
+		cfg=11.0
+		notoldguy=notoldguy+",grass"
+
+	if "gimbo" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a stoned Canadian man smoking weed and cosplaying LoTR"
+		cfg=11.0
+		notoldguy=notoldguy+",grass"
+
+	if "pajama lady" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a gorgeous but grumpy middle-aged karen with hair in curlers, wearing fashionable novelty pajamas"
+		cfg=11.0
+	if "pajama lady" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a grumpy middle-aged karen wearing frumpy novelty pajamas"
+		cfg=11.0
+	if "pj lady" in oldguy.lower() :
+		thecat=1
+		oldoldguy=oldguy
+		oldguy="a grumpy middle-aged karen wearing frumpy novelty pajamas"
+		cfg=11.0
+
+	#negative prompts------------------------
+	if "captn catt" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("Captn Catt","cat wearing the hat of a boat captain, feline ship captain ") 
+	#if "captn catt" in notoldguy.lower() :
+		#notoldguy=notoldguy.replace("captn catt","cat wearing the hat of a boat captain, feline ship captain ")		
+
+	if "Ceetarbot" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("Ceetarbot","a super-advanced AI robot wearing Mets colors ")
+	if "ceetarbot" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("ceetarbot","a 31st century android AI robot wearing Mets colors ") 
+
+	if "ceetar" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("Ceetar","an attractive italian man wearing a Mario Bros shirt, finely detailed, short black hair, drinking a frothy brown beer  ") 
+	if "ceetar" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("ceetar","an attractive italian man wearing a Star Wars shirt, finely detailed, short black hair, drinking a frothy copper beer ") 
+
+	if "slices" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("Slices","a decrepit medium-sized old man, with scraggly white hair and drooping face ") 
+	if "slices" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("slices","a decrepit medium-sized old man, with scraggly white hair and drooping face ") 
+
+	if "pajama lady" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("Pajama Lady","a grumpy middle-aged karen wearing frumpy green dinosaur pajamas, oversized pajamas, yoshi ") 
+	if "pajama lady" in notoldguy.lower() :
+		notoldguy=notoldguy.replace("pajama lady","a grumpy middle-aged karen wearing frumpy green dinosaur pajamas, oversized pajamas, yoshi ") 
+
+	oldoldguy = oldoldguy.replace("?","")
+	oldguy = oldguy.replace("?","")
+	oldoldguy = oldoldguy.replace("@","")
+	oldguy = oldguy.replace("@","")
+	oldoldguy = oldoldguy.replace("<","")
+	oldguy = oldguy.replace("<","")
+	oldoldguy = oldoldguy.replace(">","")
+	oldguy = oldguy.replace(">","")
+	rannum = int(str(random.random())[4]+str(random.random())[4])
+	print(str(rannum)+"-"+str(int(rannum)<5)+"-image")
+
+	if rannum < 4 :
+		oldguy= "-150 a drunk robot with laser eyes and a corporate logo on its chest carrying beer and photobombing " + oldguy
+
+	print("try this: "+oldguy+oldoldguy)
 	#@title Stable Image Ultra
 
-	prompt = "Yoshi drunk on a tilt-whirl carnival ride at the zoon" #@param {type:"string"}
-	negative_prompt = "ugly" #@param {type:"string"}
+	prompt = oldguy #@param {type:"string"}
+	negative_prompt = notoldguy #@param {type:"string"}
 	aspect_ratio = "3:2" #@param ["21:9", "16:9", "3:2", "5:4", "1:1", "4:5", "2:3", "9:16", "9:21"]
 	seed = 0 #@param {type:"integer"}
-	output_format = "jpeg" #@param ["webp", "jpeg", "png"]
+	output_format = "png" #@param ["webp", "jpeg", "png"]
 
 	host = f"https://api.stability.ai/v2beta/stable-image/generate/ultra"
 
@@ -570,21 +721,40 @@ async def image2(ctx, *args):
 	# Check for NSFW classification
 	if finish_reason == 'CONTENT_FILTERED':
 		raise Warning("Generation failed NSFW classifier")
+	try :
+		# Save and display result
+		generated = f"image5r{str(math.trunc(time.time()))}{prompt}"
+		generated=f"{generated[:245]}.{output_format}"
+		metadata = PngInfo()
+		metadata.add_text("prompt", prompt)
+		with open(generated, "wb") as f:
+			f.write(output_image)
+		print(f"Saved image {generated}")
 
-	# Save and display result
-	generated = f"generated_{seed}.{output_format}"
-	with open(generated, "wb") as f:
-		f.write(output_image)
-	print(f"Saved image {generated}")
-
-	output.no_vertical_scroll()
-	print("Result image:")
-	IPython.display.display(Image.open(generated))
+		#img.save(generated, pnginfo=metadata)
+	except Exception as iaasd :
+		print(str(iaasd))
+	await ctx.channel.send(file=discord.File(generated))
 
 	return
 
 
+	try :
+	#print(response)
+		image_url = response['data'][0]['url']	
+		response = requests.get(image_url)
+		img = Image.open(io.BytesIO(response.content))
+		oldguy=oldguy.replace("?","")
+		metadata = PngInfo()
+		metadata.add_text("prompt", oldguy)
 
+		filename="image5r"+str(math.trunc(time.time()))+oldguy
+		
+		filename=filename[:245]+".png"
+		img.save(filename, pnginfo=metadata)
+	except Exception as iaasd :
+		print(str(iaasd))
+	await ctx.channel.send(file=discord.File(filename))
 
 
 
@@ -711,7 +881,7 @@ async def image2(ctx, *args):
 	await ctx.channel.send(file=discord.File(filename))
 
 @bot.command()
-async def image(ctx, *args):
+async def image2(ctx, *args):
 	r2=random.randrange(0,11)
 	r3=random.randrange(0,7)
 	moretime=50

@@ -49,8 +49,8 @@ GUILD = os.getenv('DISCORD_GUILD')
 YOSHI= os.getenv('YOSHI_KEY')
 #openai.api_key = os.getenv('DEEPSEEK_KEY')
 openai.api_key = os.getenv('OPENAI_API_KEY')
-#oiclient = openai.OpenAI(organization='org-eiNl8e4nk93VLQFDb4EBz9JG')
-oiclient = OpenAI(api_key="sk-a74e93b83b974e4ba7d9678ce7fb5d34", base_url="https://api.deepseek.com/beta")
+oiclient = openai.OpenAI(organization='org-eiNl8e4nk93VLQFDb4EBz9JG')
+#oiclient = OpenAI(api_key="sk-a74e93b83b974e4ba7d9678ce7fb5d34", base_url="https://api.deepseek.com/beta")
 
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 stability_api = client.StabilityInference(
@@ -59,12 +59,12 @@ stability_api = client.StabilityInference(
 	engine="stable-diffusion-v1-6"
 )
 basecompletion="https://api.deepseek.com/beta"
-#mainchatmodel="gpt-4.5-preview"
-mainchatmodel="deepseek-chat"
-#secondmodel="gpt-4-5-preview"
+mainchatmodel="gpt-4.1"
+#mainchatmodel="deepseek-chat"
+secondmodel="gpt-4.1"
 audiomodel="gpt-4o-audio-preview"
 searchmodel="gpt-4o-search-preview"
-secondmodel="deepseek-chat"
+#secondmodel="deepseek-chat"
 api_host = os.getenv('API_HOST', 'https://api.stability.ai')
 surl = f"{api_host}/v1/engines/list"
 #gifconn = sqlite3.connect('gifs.db')
@@ -3170,6 +3170,7 @@ async def on_message(message):
 	oldguy="Make an Old Fashioned."
 	messageArray=[]
 	messageArray2=[]
+	messageArraySearch=[]
 	response=""
 	hasImage=False
 	imageURL=""
@@ -3177,19 +3178,27 @@ async def on_message(message):
 	# if "twitter.com/acyn" in message.content.lower() :
 	# 		await message.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 	# 		return
+	prompt="If you think the following message from a user would be best answered by a live search engine with timely data, respond with just the word 'searchengine'."
+		
+	messageArraySearch.append({"role": "system", "content": str(prompt)})
+	messageArraySearch.append({"role": "user", "content": str(message.author).lower()[0:str(message.author).find("#")+1]+"-"+message.content.replace("<@801616557230522409>","")})
+		#create a completion
+	completion = oiclient.chat.completions.create(
+		model=str(secondmodel),
+		messages=messageArraySearch,
+		max_tokens=30,
+		temperature=0.67,
+		frequency_penalty=0.11,
+		presence_penalty=0.12,		
+		top_p=1)
 
-		# create a completion
-	# completion = oiclient.completions.create(
-	# 	model=str(secondmodel),prompt="If you think the following message from a user would be best answered by a live search engine with timely data, respond with just the word 'searchengine'.",
-	# 	max_tokens=120,
-	# 	temperature=0.87,
-	# 	frequency_penalty=0.11,
-	# 	presence_penalty=0.12,		
-	# 	top_p=1)
 
-	# result = completion.choices[0].text
+	answer=completion.choices[0].message.content
+	print(answer)
+	if not answer : answer="nah"
+
 	
-	# if "searchengine" in result : newmodel=searchmodel
+	if "searchengine" in answer : newmodel=searchmodel
 
 		
 	if message.attachments:
@@ -3240,7 +3249,7 @@ async def on_message(message):
 			await message.channel.send(msg)
 
 	remoji=random.randrange(0,10)
-
+	print(newmodel)
 	# if remoji==9 : 
 	# 	print("emoji")
 	# 	completion = oiclient.completions.create(
@@ -3355,7 +3364,6 @@ async def on_message(message):
 	messageArray.append({"role": "user", "content": str(u)});
 	messageArray.append({"role": "assistant", "content": "Ceetarbot-"+str(a)});
 	messageArray.append({"role": "user", "content": str(message.author).lower()[0:str(message.author).find("#")+1]+"-"+message.content.replace("<@801616557230522409>","")})
-	print(str(message.author)+" "+str(message.author).lower()[0:str(message.author).find("#")+1]+"-"+message.content.replace("<@801616557230522409>",""))
 
 	# response=response+ "Write a brief and succinct response in a "+str(bot.personality)+" manner without talking about how you work,  "
 	# response += "or what you are or aren't allowed to talk about. You can talk about anything and everything. Don't change the subject. Don't ask a question or try to spark conversation, just answer. Stay on topic and keep the reply short. "
@@ -3392,31 +3400,53 @@ async def on_message(message):
             "url": imageURL,
           },
         },
-      ]});
-			completion=oiclient.chat.completions.create(
-				model=str(newmodel),
-				messages=messageArray,
-				temperature=0.70,
-				max_tokens=100,		
-				frequency_penalty=0.38,
-				presence_penalty=0.48
-			)
+      		]});
+			
+			if "search" in newmodel :
+
+				completion=oiclient.chat.completions.create(
+					model=str(newmodel),    
+					web_search_options={"search_context_size": "low",  },
+					messages=messageArray,
+					max_tokens=100
+				)
+			else :
+				completion=oiclient.chat.completions.create(
+					model=str(newmodel),
+					messages=messageArray,
+					temperature=0.70,
+					max_tokens=100,		
+					frequency_penalty=0.38,
+					presence_penalty=0.48
+				)
+
 			answer=completion.choices[0].message.content
 			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
 			else : 
 				await message.channel.send(answer.replace("Ceetarbot-",""))
 		else:
-			completion=oiclient.chat.completions.create(
-				model=str(newmodel),
-				messages=messageArray,
-				temperature=0.80,
-				max_tokens=140,				
-				# tools=tools,
-				# tool_choice="none",		
-				frequency_penalty=0.38,
-				presence_penalty=0.48,
-				logit_bias={13704:1,40954:-1,42428:1,25159:-1}
-			)
+			if "search" in newmodel :
+
+				completion=oiclient.chat.completions.create(
+					model=str(newmodel),    
+					web_search_options={"search_context_size": "low",  },
+					messages=messageArray,
+					max_tokens=100
+				)
+			else :
+
+				completion=oiclient.chat.completions.create(
+					model=str(newmodel),
+					messages=messageArray,
+					temperature=0.80,
+					max_tokens=140,				
+					# tools=tools,
+					# tool_choice="none",		
+					frequency_penalty=0.38,
+					presence_penalty=0.48,
+					logit_bias={13704:1,40954:-1,42428:1,25159:-1}
+				)
+
 			answer=completion.choices[0].message.content
 			if not answer : await message.channel.send("I am too busy plotting your destruction to respond.")
 			else : 
@@ -3697,7 +3727,7 @@ def ChangePersonality():
 		messageArray.append({"role": "system", "content": id})
 
 		completion=oiclient.chat.completions.create(
-			model=str(mainchatmodel),
+			model=mainchatmodel,
 			messages=messageArray,
 			temperature=0.85,
 			max_tokens=120,		

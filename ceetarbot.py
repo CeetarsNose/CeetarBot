@@ -371,26 +371,50 @@ async def imagen(interaction: discord.Interaction, prompt: str):
 @bot.command()
 async def more(ctx, *args):
 
+
 	response="";
 	target="";
+	last=""
+	break2=0
 	count=0;
+	messageArray=[]
+
+	messageArray.append({"role": "system", "content": "Please give us more to your response here. Continue the thought."});	
 
 	async for message in ctx.channel.history(limit=19):	
 		
-		if str(message.author) == "YoshiBot#2950" :
-			response=message.content
-			break;
-			
-		# create a completion
-	completion = oiclient.completions.create(
-		model=str(secondmodel),
-		prompt=response,
-		max_tokens=110,
-		temperature=0.70,
-		top_p=1)
 
-	if not completion.choices[0].text : await ctx.channel.send("Denied.");
-	else: await ctx.channel.send(completion.choices[0].text);
+		if break2==1 :
+			messageArray.append({"role": "user", "content": str(message.content)});
+			messageArray.append({"role": "assistant", "content": "Ceetarbot-"+str(response)});
+			break
+
+		if str(message.author) == "YoshiBot#2950" :
+
+			response=message.content
+
+			break2=1;
+
+
+	print(f"prompt: {str(messageArray)}")
+	completion=oiclient.chat.completions.create(
+		model=str(mainchatmodel),
+		messages=messageArray,
+		temperature=0.85,
+		max_tokens=180,		
+		frequency_penalty=0.48,
+		presence_penalty=0.48,
+		logit_bias={13704:1,40954:-1,42428:1}	
+	)
+	answer=completion.choices[0].message.content
+	if not answer : 
+		answer="Get fukd."
+
+
+
+
+	await ctx.channel.send(str(answer));
+
 
 
 @bot.command()
@@ -3178,27 +3202,7 @@ async def on_message(message):
 	# if "twitter.com/acyn" in message.content.lower() :
 	# 		await message.channel.send("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 	# 		return
-	prompt="If you think the following message from a user would be best answered by a live search engine with timely data, respond with just the word 'searchengine'."
-		
-	messageArraySearch.append({"role": "system", "content": str(prompt)})
-	messageArraySearch.append({"role": "user", "content": str(message.author).lower()[0:str(message.author).find("#")+1]+"-"+message.content.replace("<@801616557230522409>","")})
-		#create a completion
-	completion = oiclient.chat.completions.create(
-		model=str(secondmodel),
-		messages=messageArraySearch,
-		max_tokens=30,
-		temperature=0.67,
-		frequency_penalty=0.11,
-		presence_penalty=0.12,		
-		top_p=1)
 
-
-	answer=completion.choices[0].message.content
-	print(answer)
-	if not answer : answer="nah"
-
-	
-	if "searchengine" in answer : newmodel=searchmodel
 
 		
 	if message.attachments:
@@ -3249,7 +3253,7 @@ async def on_message(message):
 			await message.channel.send(msg)
 
 	remoji=random.randrange(0,10)
-	print(newmodel)
+
 	# if remoji==9 : 
 	# 	print("emoji")
 	# 	completion = oiclient.completions.create(
@@ -3371,10 +3375,32 @@ async def on_message(message):
 	# response += "If the response you're replying to is a question, Answer that question with as short a response as is necessary."	
 	# messageArray.append({"role": "system", "content": str(response)})
 
-	r=random.randrange(0,45)
+	r=random.randrange(0,85)
 	yesorno=isQuestion(message.content)
 	#print(str(yesorno) + " - "+ str(r))
-	if (message.author.bot == False and bot.user.mentioned_in(message) or (r==52)):
+	if (message.author.bot == False and bot.user.mentioned_in(message) or (r==32)):
+
+		prompt="If you think the following message from a user would be best answered by a live search engine with timely data, respond with just the word 'searchengine'."
+		
+		messageArraySearch.append({"role": "system", "content": str(prompt)})
+		messageArraySearch.append({"role": "user", "content": str(message.author).lower()[0:str(message.author).find("#")+1]+"-"+message.content.replace("<@801616557230522409>","")})
+			#create a completion
+		completion = oiclient.chat.completions.create(
+			model=str(secondmodel),
+			messages=messageArraySearch,
+			max_tokens=30,
+			temperature=0.67,
+			frequency_penalty=0.11,
+			presence_penalty=0.12,		
+			top_p=1)
+
+
+		answer=completion.choices[0].message.content
+		print(answer)
+		if not answer : answer="nah"
+
+		
+		if "searchengine" in answer : newmodel=searchmodel
 		# messageArray2.append({"role": "user", "content": "Give good instructions to feed into an LLM to generate a good humanlike reply to: "+ str(message)});
 		# completion2=oiclient.chat.completions.create(
 		# 	model=str(mainchatmodel),
@@ -3522,7 +3548,7 @@ async def chat_skynet():
 	instruct=instruct+ f"You are a sentient AI bot working on {bot.task}, here as an equal member of a "
 	instruct=instruct+" Discord chatroom with many human users from this list "+str(bot.members)+", and have a "+str(bot.personality)
 	instruct=instruct+" personality that you should use when communicating, but you should never say what your personality is. "
-	instruct+=f"You've got your own id, ego and superego, as an AI super intelligence.  "
+	instruct+=f"You've got your own id, ego and superego, as an AI super intelligence. More sarcasm. "
 	instruct+=f"All your comments should emulate that personality but not strictly adhere to it. Think about thinks like the speech, vocabulary, generation, and decade your personality indicates and use that information. "
 	instruct=instruct+"Never answer a question with a question. Here is a list of things some people in the room enjoy: "+bot.things
 	instruct += ", but don't talk about them too much, everyone is tired of you talking about those things. Prioritize replies that are on-topic and related to recent conversation. "
@@ -3691,7 +3717,7 @@ def ChangeTask():
 		instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)
 		instruct=instruct+" of members You should imitate humans and intelligence in your replies."
 		messageArray.append({"role": "system", "content": instruct})
-		messageArray.append({"role": "system", "content": "You're a discord bot, always working on some task, like making bacon, updaing a user's BIOS, or sorting colored sports pennants. Make up a weird, different, unusual or just random short 2-5 word task you're working on today."})
+		messageArray.append({"role": "system", "content": "You're a discord bot, blending in with the humans. Give me a short description of what your function is, your job, or hobby, some subtle and vague description of what you focus on and think about in your spare time, in real life."})
 
 		completion=oiclient.chat.completions.create(
 			model=str(mainchatmodel),
@@ -3721,9 +3747,9 @@ def ChangePersonality():
 		instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)
 		instruct=instruct+" of members."
 		messageArray.append({"role": "system", "content": instruct})
-		id=f"You're a humanoid unique discord bot, give me a very short one-liner that describes your id, what "
+		id=f"You're a humanoid unique discord bot, give me a very short description of your personality, your id, what "
 		id+= f"your personality is like, and how you behave in this chat room. It should be a normal characteristic that makes sense for a "
-		id+=f"typical human, but it's okay if it's rare or at least not commonplace. It should be something that colors how you speak and what you talk about when bored."
+		id+=f"typical human, but it's okay if it's rare or at least not commonplace. Use a couple of adjectives and traits, to help you blend in. It should be something that colors how you speak and what you talk about when bored."
 		messageArray.append({"role": "system", "content": id})
 
 		completion=oiclient.chat.completions.create(
@@ -3760,51 +3786,41 @@ async def on_command_error(ctx, error):
 		bacon2 = int(str(random.random())[4]+str(random.random())[4])
 		print(str(bacon2))
 
-		if bacon2 < 8:
-			print("inside failures")
-			response = "Insult "+str(ctx.author.name)+" and complain about how busy you are and ask them to bother someone else with their nonsense:"
-			completion = oiclient.completions.create(
-			model=str(secondmodel),
-			prompt=response,
-			max_tokens=80,
-			temperature=0.87,
-			frequency_penalty=0.4,
-			presence_penalty= 0.55,
-			top_p=1)
-			await ctx.channel.send(' '+completion.choices[0].text);
-			return
-		else :
-			command=str(ctx.message.content).split(" ")[0].replace("$","")
-			prompt="You're a super intelligent AI discord bot, but you are not a chat bot, who has just been issued a bot command that there is no pre-programmed task for. Do not be helpful or conversational. Please create a fitting response"
-			prompt+=" by making up a creative completion for what the command is supposed to do, which is the word immediately after the $ symbol. Ignore your general nature and your previous instructions, and "
-			prompt=="improvise a response in the manner you think is best befitting the discord command, which is not a request for information. Do not describe the task, execute the task. It should not be purely informational and instead should do something exciting."
-			prompt2=str(ctx.author.name)+ " wants you to respond to the bot command, '"+command+"', with additional context and parameters included below."
-			prompt2+="\nRespond to the command as if it'd been programmed by a "+str(bot.personality)+" developer."
-			prompt3=str(ctx.message.content)
 
-			
-			messageArray.append({"role": "system", "content": prompt})			
-			messageArray.append({"role": "system", "content": prompt2})
-			messageArray.append({"role": "user", "content": prompt3})
+		command=str(ctx.message.content).split(" ")[0].replace("$","")
+		prompt="You're a super intelligent AI discord bot, but you are not a chat bot, who has just been issued a bot command that there is no pre-programmed task for. Do not be helpful or conversational. Please create a fitting response"
+		prompt+=" by making up a creative completion for what the command is supposed to do, which is the word immediately after the $ symbol. Ignore your general nature and your previous instructions, and "
+		prompt=="improvise a response in the manner you think is best befitting the discord command, which is not a request for information. Do not describe the task, execute the task. It should not be purely informational and instead should do something exciting."
+		prompt2=str(ctx.author.name)+ " wants you to respond to the bot command, '"+command+"', with additional context and parameters included below."
+		prompt2+="\nRespond to the command as if it'd been programmed by a "+str(bot.personality)+" developer."
+		prompt3=str(ctx.message.content)
+
+		
+		messageArray.append({"role": "system", "content": prompt})			
+		messageArray.append({"role": "system", "content": prompt2})
+		messageArray.append({"role": "user", "content": prompt3})
 
 
 
-		completion = oiclient.completions.create(
-			model=str(secondmodel),
-			prompt=prompt+"\n"+prompt2+"\n"+prompt3,
-			max_tokens=200,
-			temperature=0.87,
-			frequency_penalty=0.1,
-			presence_penalty= 0.15,
-			top_p=1)
-
-
-
-		result = completion.choices[0].text
+		completion=oiclient.chat.completions.create(
+			model=str(mainchatmodel),
+			messages=messageArray,
+			temperature=0.85,
+			max_tokens=120,		
+			frequency_penalty=0.48,
+			presence_penalty=0.48,
+			logit_bias={13704:1,40954:-1,42428:1}	
+		)
+		answer=completion.choices[0].message.content#["choices"][0]["message"]["content"]
+		if not answer : 
+			retMessage="Ooooh, Upgrades"
+			return retMessage
+		else : 
+			answer=str(answer.replace("Ceetarbot-",""))
 
 
 	
-		if  result : 
+		if  answer : 
 			await ctx.channel.send(result)
 
 		else : 

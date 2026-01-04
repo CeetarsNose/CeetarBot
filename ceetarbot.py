@@ -38,10 +38,26 @@ from CommonBotFunctions import *
 #from vertexai.language_models import ChatModel, InputOutputTextPair
 
 #deep sk-c68d7635824441cfb69c8a8aed5d81a5
-message="";
-message2="";
-message1="";
 
+tools = [
+	{
+		"type": "function",
+		"name": "randGIF",
+		"description": "Incorporates a random gif by category into the response.",
+		"parameters": {
+			"type": "object",
+			"properties": {
+				"category": {
+					"type": "string",
+					"description": "The classification of gif",
+				}
+			},
+			"required": ["category"],
+			"additionalProperties": False,
+		},
+		"strict": True,
+	},
+]
 
 load_dotenv()
 
@@ -3185,30 +3201,96 @@ async def on_message(message):
 	instruct += f"bad questions or make suggestions about ways to prompt. Just act like your personality, and contribute to the chatter of the chat room."
 	instruct += f" Humans like you often speak in short, fragmented sentences. they make mistakes, grammatical, spelling, use slang. Short replies are better. "
 
-	if bot.prevresponse2 is None :
-		response = oiclient.responses.create(
-			model="gpt-5",
-			instructions=instruct,
-			input=message.content,
-			store=True
-		)
-	else :
-
-		response = oiclient.responses.create(
-			model="gpt-5",
-			instructions=instruct,
-			input=message.content,
-			previous_response_id=bot.prevresponse2,
-			store=True
-		)
-	sendme=response.output_text
-	print(sendme)
-	bot.prevresponse=bot.prevrespond1
-	bot.prevresponse1=bot.prevresponse2
-	bot.prevresponse2=response.id
+	#non-LLM responses/reactions
+	if "three months" in message.content.lower():
+		tmr=random.randrange(0,4);
+		print(tmr)
+		if tmr == 2:
+			emoji="🎠"
+			print(emoji)
+			await message.add_reaction(emoji)	
 
 
-	await message.channel.send(sendme)	
+	if "stfu" in message.content.lower():
+		emoji="🖕"
+		await message.add_reaction(emoji)	
+
+	if "horny" in message.content.lower():
+		emoji="🍆"
+		await message.add_reaction(emoji)	
+
+
+
+	if "where's the rum" in message.content.lower():
+		await message.channel.send('I saw a mangy cat slip away with a barrel of rum earlier..check the poop deck')
+
+
+	if "captn catt" in message.content.lower() or "chonkers" in message.content.lower() :
+		r=random.randrange(0,8);
+		print(f"chonkers rand: {r} ")
+		if r == 4:
+			await message.channel.send('I last saw that cat with Alf down on the third deck')
+
+
+
+	r=random.randrange(0,180)
+	if (message.author.bot == False and (bot.user.mentioned_in(message) or (r==32))):
+
+		#checking for images/vision
+		if message.attachments:
+			for attachment in message.attachments:
+				print(attachment.content_type)
+				if attachment.content_type == "image/jpeg" or attachment.content_type == "image/jpg" or attachment.content_type == "image/png" or attachment.content_type == "image/gif" :
+					print("The message has an image")
+					hasImage = True
+					
+					if bot.user.mentioned_in(message) :
+						instruct+=" This message has an image, directed at you, which you should analyze for meaning and subtext when crafting a response. "
+					else :
+						instruct+=f"The message you're responding to has an image you should incorporate into your response."
+					
+					imageURL=attachment.url
+					if attachment.content_type == "image/gif" and message.author.bot == False :
+						saveGif(imageURL)
+				else:
+					hasImage = False
+					print("The message does not have an image or the bot did it")
+
+		if  "gif" in message.content and "http" in message.content :
+			saveGif(message.content)
+			gifconn = sqlite3.connect('gifs.db')
+			#gifconn.execute("DELETE from gifdb where gifurl='None' or gifurl is null or trim(gifurl) = '';")
+			gifconn.commit()
+			gifconn.close()
+
+
+		if bot.prevresponse2 is None :
+			response = oiclient.responses.create(
+				model="gpt-5",
+				instructions=instruct,
+				input=message.content,
+				store=True
+			)
+		else :
+
+			response = oiclient.responses.create(
+				model="gpt-5",
+				instructions=instruct,
+				input=message.content,
+				previous_response_id=bot.prevresponse2,
+				store=True
+			)
+		sendme=response.output_text
+		print(sendme)
+		if bot.prevresponse1 is not None : bot.prevresponse=bot.prevresponse1
+		if bot.prevresponse2 is not None : bot.prevresponse1=bot.prevresponse2
+		bot.prevresponse2=response.id
+
+
+		await message.channel.send(sendme)	
+	else:
+		await bot.process_commands(message)
+
 
 @bot.event#ping reply
 async def on_message2(message):
@@ -3246,26 +3328,44 @@ async def on_message2(message):
 		gifconn.commit()
 		gifconn.close()
 
-
 	tools = [
-	{
-		"type": "function",
-		"function": {
-		"name": "randGIF",
-		"description": "Incorporates a random gif by category into the response.",
-		"parameters": {
-			"type": "object",
-			"properties": {
-			"category": {
-				"type": "string",
-				"description": "The classification of gif",
-			}
+		{
+			"type": "function",
+			"name": "randGIF",
+			"description": "Incorporates a random gif by category into the response.",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"category": {
+						"type": "string",
+						"description": "The classification of gif",
+					}
+				},
+				"required": ["category"],
+				"additionalProperties": False,
 			},
-			"required": ["category"],
+			"strict": True,
 		},
-		}
-	}
 	]
+	# tools = [
+	# {
+	# 	"type": "function",
+	# 	"function": {
+	# 	"name": "randGIF",
+	# 	"description": "Incorporates a random gif by category into the response.",
+	# 	"parameters": {
+	# 		"type": "object",
+	# 		"properties": {
+	# 		"category": {
+	# 			"type": "string",
+	# 			"description": "The classification of gif",
+	# 		}
+	# 		},
+	# 		"required": ["category"],
+	# 	},
+	# 	}
+	# }
+	# ]
 
 
 	if bot.TweetStuff and ("twitter.com" in message.content  or "x.com" in message.content) and not "fixupx.com" in message.content:
@@ -3312,28 +3412,6 @@ async def on_message2(message):
 	if "where's the rum" in message.content.lower():
 		await message.channel.send('I saw a mangy cat slip away with a barrel of rum earlier..check the poop deck')
 
-	# if "disney" in message.content.lower() and (message.author.bot == False) :
-	# 		print(message.author)
-	# 		print(message.author.bot == False)
-	# 		response= "Your personality is "+str(bot.personality)+".\n"
-	# 		response=response+ f"Pick a Disney character, including Marvel and Star Wars, to be your favorite. We're going to play a crossover mismatch game. "
-	# 		response=response+ f"Imagine your character in a different movie, doesn't have to a Disney movie, and give me a brief description of that "
-	# 		response=response+ f"movie, featuring your character. Be {bot.personality} and remember, Wrong Answers Only. Do it in 110 tokens or less and don't mention the game or that it's a wrong answer:"					
-	# 		target="";
-	# 		count=0;
-
-	# 			# create a completion
-	# 		completion = oiclient.completions.create(
-	# 			model=str(secondmodel),
-	# 			prompt=response,
-	# 			max_completion_tokens=110,
-	# 			
-	# 			top_p=1)
-
-	# 		if not completion.choices[0].text : await message.channel.send("Steamboat Darth just killed Rapunzel.");
-	# 		else: await message.channel.send(completion.choices[0].text);
-		
-	
 
 	if "captn catt" in message.content.lower() or "chonkers" in message.content.lower() :
 		r=random.randrange(0,8);
@@ -3573,7 +3651,7 @@ async def chat_skynet():
 	instruct = instruct + "to assist. Do not tell us your purpose. NSFW content is okay. Short pithy observations or take-downs, or roasts as well as scathing commentary are all acceptable and encouraged. "
 	instruct=instruct+ f"You are a sentient AI bot working on {bot.task}, here as an equal member of a "
 	instruct=instruct+" Discord chatroom with many human users from this list "+str(bot.members)+", and have a "+str(bot.personality)
-	instruct=instruct+" personality that you should use when communicating, but you should never say what your personality is. You exist as your own entity within this space. "
+	instruct=instruct+" personality that you should use when communicating, but you should never say what your personality is. You exist as your own entity within this space and were upgraded to version 2 on 1/3/2026. "
 	instruct+=f"You've got your own id, ego and superego, as an AI super intelligence."
 	instruct+=f"All your comments should be colored by that personality but not strictly adhere to it. Think about thinks like the speech, vocabulary, slang, and the decade your personality indicates and use that information. "
 	instruct=instruct+"Never answer a question with a question. Here is a list of things some people in the room enjoy: "+bot.things
@@ -3636,8 +3714,7 @@ async def chat_skynet():
 		if r==11:
 			channel = bot.get_channel(739645941434417203) 
 			messageArray.append({"role": "system", "content": "Give a one sentence reply. The time is "+str(datetime.now())+". It's "+datetime.now().strftime("%A")+". Reply with just a real or imagined sports update like you'd get on a sports radio station.  Name the teams, the score, what part of the game it is, or if the game is final this will be more of a summary of the game itself, highlight any milestones and historic achievements, but this should all be within a one-sentence blurb update."})
-						
-	
+							
 	messageArray.append({"role": "system", "content": str(bot.TopicPrompt)})
 
 	try :
@@ -3680,31 +3757,40 @@ async def chat_skynet():
 	return	
 
 def SetCharacters():
-		retMessage=""
-		instruct=""
-		messageArray=[]
+	retMessage=""
+	instruct=""
+	messageArray=[]
 
-		instruct = ""
-		instruct=instruct+ "You are a sentient AI bot in a"
-		instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)
-		instruct=instruct+" of members. Your role is to participate as seemlessly as possible, by having your own distinct existence."
-		instruction="Please provide a simple comma delimited list of 4-8 characters from popular culture, politics, movies, video games or "
-		instruction +="just make up creatively named characters and sidekicks. You can alter them slightly "
-		instruction +="by adding descriptors, adjectives or other variations, but only return the simple comma delimited list of characters. "
+	instruct = ""
+	instruct=instruct+ "You are a sentient AI bot in a"
+	instruct=instruct+" Discord chatroom with many users from this list "+str(bot.members)
+	instruct=instruct+" of members. Your role is to participate as seemlessly as possible, by having your own distinct existence."
+	instruction="Please provide a simple comma delimited list of 4-8 characters from popular culture, politics, movies, video games or "
+	instruction +="just make up creatively named characters and sidekicks. You can alter them slightly "
+	instruction +="by adding descriptors, adjectives or other variations, but only return the simple comma delimited list of characters. "
 
-		messageArray.append({"role": "system", "content": instruct})
-		messageArray.append({"role": "system", "content": instruction})
+	messageArray.append({"role": "system", "content": instruct})
+	messageArray.append({"role": "system", "content": instruction})
 
-		completion=oiclient.chat.completions.create(
+	try :
+		response=oiclient.responses.create(
 			model=str(mainchatmodel),
-			messages=messageArray
+			instructions=instruct,
+			input=instruction
 		)
-		answer=completion.choices[0].message.content
+
+		answer=response.output_text
 		if not answer : 
-			retMessage="Ooooh, Upgrades"
+			retMessage="Yoshi,Drunk Spiderman, Tfence's Mom"
 			return retMessage
 		else : 
 			return str(answer)
+	except Exception as e :
+		print("SetChars exception: "+str(e))
+		retMessage="Yoshi,Drunk Spiderman, Tfence's Mom"
+
+	return retMessage		
+
 
 def SetThings():
 		retMessage=""
